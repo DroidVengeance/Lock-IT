@@ -1,0 +1,312 @@
+#Lock-IT! by DroidVengeance
+#A Skript alternative to the popular "Lockette" plugin
+#COMMAND: /lockit <line number> <text>
+options:
+
+#SETTINGS
+	fastlockitems: any door block or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
+	fastlocksettime: 1 #In seconds
+	fastlock: true #If TRUE, shift+right clicking a chest while holding a sign will private the chest automatically
+	prefix: &4[&6Lock-IT&4]
+#MESSAGES
+	msgalreadylocked: This container is already locked!
+	msglocked: You have locked this container!
+	msgdenied: This container doesn't belong to you!
+#PERMISSIONS
+	uselockit: lockit.player
+	bypasslocked: lockit.bypass.locked #Allows Staff to bypass locked chests
+	bypassbreak: lockit.bypass.break #Allows Staff to break protected containers
+	bypassmodify: lockit.bypass.modify #Allows Staff to modify protected container signs
+	
+aliases:
+	any door block = 64, 193, 194, 195, 196, 197, 71, 427
+	any fence gate = 107, 183, 184, 185, 186, 187
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+
+command /lockit [<integer>] [<text>]:
+	permission: lockit.player
+	trigger:
+		if arg 1 is set:
+			if arg 2 is not set:
+				set line arg 1 of block at {updateSignLoc.%player%} to " "
+				delete {updateSignLoc.%player%}
+				message "{@prefix} &esign updated!"
+				stop
+			else:
+				set line arg 1 of block at {updateSignLoc.%player%} to "%arg-2%"
+				delete {updateSignLoc.%player%}
+				message "{@prefix} &esign updated!"
+				stop
+		if arg 2 is "fix":
+			if line 1 of target block is "[Private]" or "[private]":
+				if line 2 of target block contains "%player%" or "%UUID of player%":		
+					toggle block behind target block
+					message "{@prefix} &eFixed"
+					stop
+		if arg 2 is "items":
+			message "{@fastlockitems}"
+			stop
+		if arg 2 is "help":
+			message "&4&m---------------------------------------------------"
+			message "{@prefix} &eby DroidVengeance"
+			message "&4&m---------------------------------------------------"
+			message "{@prefix} &eShift+Rightclicking while holding a sign, will automatically lock those items."
+			message "{@prefix} &eTo edit a sign, rightclick and use:"
+			message "&e/lockit <line number> <text>"
+			message "{@prefix} &eTo fix a door use:"
+			message "&e/lockit fix"
+			stop
+		if arg 1 is not set:
+			message "{@prefix} &eRight click the sign you want to update"
+			message "&eThen use /lockit <line number> <text>"
+			stop
+				
+			
+
+
+#FASTLOCK
+on place of wall sign:
+	if player is sneaking:
+		if {@fastlock} is true:
+			if player has permission "lockit.player":
+				if line 1 of block is "[Private]" or "[private]":
+					cancel event
+					message "{@prefix} &c{@msgalreadylocked}"
+				if block behind event-block is a {@fastlockitems}:
+					close player's inventory
+					wait {@fastlocksettime} seconds
+					set line 1 of block to "[Private]"
+					set line 2 of block to "%player%            %UUID of player%"
+					message "{@prefix} &e{@msglocked}"
+					stop
+
+#ITEM PROTECTION WHILE LOCKED					
+on right click on a {@fastlockitems}:
+	loop blocks in radius 2 of clicked block:
+		if line 1 of loop-block is "[Private]" or "[private]":
+			#if line 2 of loop-block is "%player%":
+			if line 2 of loop-block contains "%UUID of player%":
+				wait 1 tick
+				stop
+			if line 2 of loop-block does not contain "%UUID of player%":
+				if line 3 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
+					wait 1 tick
+					stop
+				if line 4 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
+					wait 1 tick
+					stop
+				if player does not have permission "{@bypasslocked}":
+					cancel event
+					message "{@prefix} &c{@msgdenied}"
+					stop
+				else:
+					cancel event
+					message "{@prefix} &c{@msgdenied}"
+					stop
+				
+
+#TIMERS	
+on right click:
+	if clicked block is iron door:
+		loop blocks in radius 3 of clicked block:
+			if line 1 of loop-block is "[Private]" or "[private]":
+				if line 2 of loop-block contains "%UUID of player%":
+					open the clicked block
+					wait 2 ticks
+					if line 4 of loop-block is "[timer:1]":
+						wait 1 seconds
+						close the clicked block
+						stop
+					if line 4 of loop-block is "[timer:2]":
+						wait 2 seconds
+						close the clicked block
+						stop
+					if line 4 of loop-block is "[timer:3]":
+						wait 3 seconds
+						close the clicked block
+						stop
+					if line 4 of loop-block is "[timer:4]":
+						wait 4 seconds
+						close the clicked block
+						stop
+					if line 4 of loop-block is "[timer:5]":
+						wait 5 seconds
+						close the clicked block
+						stop
+	if clicked block is any door block:
+		loop blocks in radius 3 of clicked block:
+			if line 1 of loop-block is "[Private]" or "[private]":
+				if line 2 of loop-block contains "%UUID of player%":
+					if line 4 of loop-block is "[timer:1]":
+						wait 1 seconds
+						toggle the clicked block
+						stop
+					if line 4 of loop-block is "[timer:2]":
+						wait 2 seconds
+						toggle the clicked block
+						stop
+					if line 4 of loop-block is "[timer:3]":
+						wait 3 seconds
+						toggle the clicked block
+						stop
+					if line 4 of loop-block is "[timer:4]":
+						wait 4 seconds
+						toggle the clicked block
+						stop
+					if line 4 of loop-block is "[timer:5]":
+						wait 5 seconds
+						toggle the clicked block
+					stop
+				if line 2 of loop-block does not contain "%UUID of player%":
+					if player does not have permission "lockit.bypass.locked":
+						if line 3 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
+							if line 4 of loop-block is "[timer:1]":
+								wait 1 seconds
+								toggle the clicked block
+								stop
+							if line 4 of loop-block is "[timer:2]":
+								wait 2 seconds
+								toggle the clicked block
+								stop
+							if line 4 of loop-block is "[timer:3]":
+								wait 3 seconds
+								toggle the clicked block
+								stop
+							if line 4 of loop-block is "[timer:4]":
+								wait 4 seconds
+								toggle the clicked block
+								stop
+							if line 4 of loop-block is "[timer:5]":
+								wait 5 seconds
+								toggle the clicked block
+							stop
+					else:
+						stop
+	if clicked block is oak fence gate:
+		loop blocks in radius 2 of clicked block:
+			if line 1 of loop-block is "[Private]" or "[private]":
+				if line 2 of loop-block contains "%UUID of player%":
+					if line 4 of loop-block is "[timer:1]":
+						wait 1 seconds
+						toggle the clicked block
+						stop
+					if line 4 of loop-block is "[timer:2]":
+						wait 2 seconds
+						toggle the clicked block
+						stop
+					if line 4 of loop-block is "[timer:3]":
+						wait 3 seconds
+						toggle the clicked block
+						stop
+					if line 4 of loop-block is "[timer:4]":
+						wait 4 seconds
+						toggle the clicked block
+						stop
+					if line 4 of loop-block is "[timer:5]":
+						wait 5 seconds
+						toggle the clicked block
+					stop
+				if line 2 of loop-block does not contain "%UUID of player%":
+					if player does not have permission "lockit.bypass.locked":
+						if line 3 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
+							if line 4 of loop-block is "[timer:1]":
+								wait 1 seconds
+								toggle the clicked block
+								stop
+							if line 4 of loop-block is "[timer:2]":
+								wait 2 seconds
+								toggle the clicked block
+								stop
+							if line 4 of loop-block is "[timer:3]":
+								wait 3 seconds
+								toggle the clicked block
+								stop
+							if line 4 of loop-block is "[timer:4]":
+								wait 4 seconds
+								toggle the clicked block
+								stop
+							if line 4 of loop-block is "[timer:5]":
+								wait 5 seconds
+								toggle the clicked block
+							stop
+					else:
+						stop
+				if line 2 of loop-block does not contain "%UUID of player%":
+					cancel event
+					message "{@prefix} &cSorry, you can't use that."
+					stop
+					
+#BREAKING LOCK-IT SIGNS AND CONTAINERS
+on break:
+	loop blocks in radius 2 of event-block:
+		if line 1 of event-block is not "[Private]" or "[private]":
+			if line 2 of loop-block contains "%UUID of player%":
+				stop
+		if line 1 of loop-block is "[Private]" or "[private]":
+			if line 2 of loop-block does not contain "%UUID of player%":
+				if player does not have permission "{@bypassbreak}":
+					cancel event
+					message "{@prefix} &c{@msgdenied}"
+					stop				
+				
+#UPDATING SIGNS				
+on right click on sign:
+	if line 1 of clicked block is "[Private]":
+		if line 2 of clicked block does not contain "%UUID of player%":
+			if player has permission "{@bypassmodify}":
+				set {updateSignLoc.%player%} to location of clicked block
+				message "{@prefix} &6Update your sign: &e/lockit <line number> <text>"
+		if line 2 of clicked block contains "%UUID of player%":
+			set {updateSignLoc.%player%} to location of clicked block
+			message "{@prefix} &6Update your sign: &e/lockit <line number> <text>"
