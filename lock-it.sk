@@ -83,6 +83,9 @@ command /lockit [<integer>] [<text>]:
 				delete {updateSignLoc.%player%}
 				message "{@prefix} &esign updated!"
 				stop
+			if arg 1 is 2:
+				message "{@prefix} &cYou can't change the owner's name!"
+				stop
 			else:
 				set line arg 1 of block at {updateSignLoc.%player%} to "%arg-2%"
 				delete {updateSignLoc.%player%}
@@ -136,19 +139,17 @@ on right click on a {@fastlockitems}:
 	loop blocks in radius 2 of clicked block:
 		if line 1 of loop-block is "[Private]" or "[private]":
 			#if line 2 of loop-block is "%player%":
-			if line 2 of loop-block contains "%UUID of player%":
+			if line 2 of loop-block contains "%player%" or "%UUID of player%":
 				wait 1 tick
 				stop
-			if line 2 of loop-block does not contain "%UUID of player%":
+			if line 2 of loop-block does not contain "%player%" or "%UUID of player%":
+				if player has permission "{@bypasslocked}":
+					stop
 				if line 3 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
 					wait 1 tick
 					stop
 				if line 4 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
 					wait 1 tick
-					stop
-				if player does not have permission "{@bypasslocked}":
-					cancel event
-					message "{@prefix} &c{@msgdenied}"
 					stop
 				else:
 					cancel event
@@ -187,7 +188,7 @@ on right click:
 	if clicked block is any door block:
 		loop blocks in radius 3 of clicked block:
 			if line 1 of loop-block is "[Private]" or "[private]":
-				if line 2 of loop-block contains "%UUID of player%":
+				if line 2 of loop-block contains "%player%" or "%UUID of player%":
 					if line 4 of loop-block is "[timer:1]":
 						wait 1 seconds
 						toggle the clicked block
@@ -236,7 +237,7 @@ on right click:
 	if clicked block is oak fence gate:
 		loop blocks in radius 2 of clicked block:
 			if line 1 of loop-block is "[Private]" or "[private]":
-				if line 2 of loop-block contains "%UUID of player%":
+				if line 2 of loop-block contains "%player%" or "%UUID of player%":
 					if line 4 of loop-block is "[timer:1]":
 						wait 1 seconds
 						toggle the clicked block
@@ -282,23 +283,35 @@ on right click:
 							stop
 					else:
 						stop
-				if line 2 of loop-block does not contain "%UUID of player%":
+				if line 2 of loop-block does not contain "%player%" or "%UUID of player%":
 					cancel event
 					message "{@prefix} &cSorry, you can't use that."
 					stop
-					
+				
 #BREAKING LOCK-IT SIGNS AND CONTAINERS
 on break:
+	if line 1 of event-block is "[Private]" or "[private]":
+		if player has permission "{@bypassbreak}":
+			stop
+		if line 2 of event-block contains "%UUID of player%":
+			stop
+		else:
+			cancel event
+			message "{@prefix} &cYou cannot break this container"
 	loop blocks in radius 2 of event-block:
-		if line 1 of event-block is not "[Private]" or "[private]":
-			if line 2 of loop-block contains "%UUID of player%":
-				stop
 		if line 1 of loop-block is "[Private]" or "[private]":
-			if line 2 of loop-block does not contain "%UUID of player%":
-				if player does not have permission "{@bypassbreak}":
-					cancel event
-					message "{@prefix} &c{@msgdenied}"
-					stop				
+		#	if player has permission "{@bypassbreak}":
+		#		stop
+		#	if line 2 of loop-block contains "%UUID of player%":
+		#		stop
+		#	else:
+			cancel event
+			message "{@prefix} &cYou cannot break this container"
+#			if line 2 of loop-block does not contain "%UUID of player%":
+#				if player does not have permission "{@bypassbreak}":
+#					cancel event
+#					message "{@prefix} &c{@msgdenied}"
+#					stop				
 				
 #UPDATING SIGNS				
 on right click on sign:
@@ -310,3 +323,6 @@ on right click on sign:
 		if line 2 of clicked block contains "%UUID of player%":
 			set {updateSignLoc.%player%} to location of clicked block
 			message "{@prefix} &6Update your sign: &e/lockit <line number> <text>"
+
+	
+	
