@@ -1,27 +1,36 @@
 #Lock-IT! by DroidVengeance
 #A Skript alternative to the popular "Lockette" plugin
-#COMMAND: /lockit <line number> <text>
 options:
 
-#SETTINGS
+#========
+#Settings
+#========
 	fastlockitems: any door block or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
 	fastlocksettime: 1 #In seconds
 	fastlock: true #If TRUE, shift+right clicking a chest while holding a sign will private the chest automatically
 	prefix: &4[&6Lock-IT&4]
-#MESSAGES
+#========	
+#Messages
+#========
 	msgalreadylocked: This container is already locked!
 	msglocked: You have locked this container!
 	msgdenied: This container doesn't belong to you!
-#PERMISSIONS
+#===========
+#Permissions
+#===========
 	uselockit: lockit.player
 	bypasslocked: lockit.bypass.locked #Allows Staff to bypass locked chests
 	bypassbreak: lockit.bypass.break #Allows Staff to break protected containers
 	bypassmodify: lockit.bypass.modify #Allows Staff to modify protected container signs
-	
+#=======	
 aliases:
+#=======
 	any door block = 64, 193, 194, 195, 196, 197, 71, 427
 	any fence gate = 107, 183, 184, 185, 186, 187
-
+#========
+#Command 
+#========
+# /lockit <line number> <text>
 
 
 
