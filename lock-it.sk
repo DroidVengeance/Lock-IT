@@ -9,11 +9,6 @@
 #A Skript alternative to the popular Lockette plugin
 #https://www.spigotmc.org/resources/lockette-uuid-supported.3054/
 
-#=========#
-# Command #
-#=========#
-# /lockit <line number> <text>
-
 #=========#	
 # Aliases #
 #=========#
@@ -155,7 +150,8 @@ command /lockit [<integer>] [<text>]:
 					
 #DEBUG ONLY BEGIN#
 		if arg 2 is "items":
-			message "%{lockIT.prefix}% %{lockIT.fastLockItems}%"
+			message "%{lockIT.prefix}% {@fastLockItems}"
+			message "%{lockIT.prefix}% %{fastLock}%"
 			stop
 #DEBUG ONLY END#
 
@@ -163,15 +159,14 @@ command /lockit [<integer>] [<text>]:
 			message "&4&m---------------------------------------------------"
 			message "%{lockIT.prefix}% &eby DroidVengeance"
 			message "&4&m---------------------------------------------------"
-			message "%{lockIT.prefix}% &eShift+Rightclicking while holding a sign, will automatically lock those items."
-			message "%{lockIT.prefix}% &eTo edit a sign, rightclick and use:"
-			message "&e/lockit <line number> <text>"
-			message "%{lockIT.prefix}% &eTo fix a door use:"
-			message "&e/lockit fix"
+			message "  - &eShift+Rightclicking while holding a sign, will automatically lock those items."
+			message "  - &eTo edit a sign, rightclick and use:"
+			message "    - &e/lockit <line number> <text>"
+			message "  - &eTo fix a door use:"
+			message "    - &e/lockit fix"
 			stop
 		if arg 1 is not set:
-			message "%{lockIT.prefix}% &eRight click the sign you want to update"
-			message "&eThen use /lockit <line number> <text>"
+			message "%{lockIT.prefix}% &eUse /lockit help"
 			stop
 				
 			
@@ -185,7 +180,7 @@ on place of wall sign:
 				if line 1 of block is "[Private]" or "[private]":
 					cancel event
 					message "%{lockIT.prefix}% &c%{lockIT.msgAlreadyLocked}%"
-				if block behind event-block is {lockIT.fastLockItems}:
+				if block behind event-block is a {@fastLockItems}:
 					close player's inventory
 					wait {@fastLockSetTime} seconds
 					set line 1 of block to "[Private]"
@@ -194,7 +189,7 @@ on place of wall sign:
 					stop
 
 #Item protection system#				
-on right click on {@fastLockItems}:
+on right click on a {@fastLockItems}:
 	loop blocks in radius 2 of clicked block:
 		if line 1 of loop-block is "[Private]" or "[private]":
 			#if line 2 of loop-block is "%player%":
