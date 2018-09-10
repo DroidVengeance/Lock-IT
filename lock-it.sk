@@ -50,20 +50,32 @@ on script load:
 		send "%colored {lockIT.prefix}% &2DONE!!" to the console
 		send "" to the console
 	send "%colored {lockIT.prefix}% &fGrabbing settings from the config..." to the console
-	set {lockIT.prefix} to single value "prefix" get of "plugins/Lock-IT/config.yml"
-	set {lockIT.fastLock} to single value "fastLock" get of "plugins/Lock-IT/config.yml"
-	set {lockIT.fastLockSetTime} to single value "fastLockSetTime" get of "plugins/Lock-IT/config.yml"
-	set {lockIT.fastLockItems} to single value "fastLockItems" get of "plugins/Lock-IT/config.yml"
-	set {lockIT.version} to single value "version" get of "plugins/Lock-IT/config.yml"
+	if {lockIT.prefix} is not set:
+		set {lockIT.prefix} to single value "prefix" get of "plugins/Lock-IT/config.yml"
+	if {lockIT.fastLock} is not set:
+		set {lockIT.fastLock} to single value "fastLock" get of "plugins/Lock-IT/config.yml"
+	if {lockIT.fastLockSetTime} is not set:
+		set {lockIT.fastLockSetTime} to single value "fastLockSetTime" get of "plugins/Lock-IT/config.yml"
+	if {lockIT.fastLockItems} is not set:
+		set {lockIT.fastLockItems} to single value "fastLockItems" get of "plugins/Lock-IT/config.yml"
+	if {lockIT.version} is not set:
+		set {lockIT.version} to single value "version" get of "plugins/Lock-IT/config.yml"
 	send "%colored {lockIT.prefix}% &fGrabbing all messages..." to the console
-	set {lockIT.msgAlreadyLocked} to single value "msgAlreadyLocked" get of "plugins/Lock-IT/messages.yml"
-	set {lockIT.msgLocked} to single value "msgLocked" get of "plugins/Lock-IT/messages.yml"
-	set {lockIT.msgDenied} to single value "msgDenied" get of "plugins/Lock-IT/messages.yml"
-	set {lockIT.useLockIT} to single value "useLockIT" get of "plugins/Lock-IT/permissions.yml"
+	if {lockIT.msgAlreadyLocked} is not set:
+		set {lockIT.msgAlreadyLocked} to single value "msgAlreadyLocked" get of "plugins/Lock-IT/messages.yml"
+	if {lockIT.msgLocked} is not set:
+		set {lockIT.msgLocked} to single value "msgLocked" get of "plugins/Lock-IT/messages.yml"
+	if {lockIT.msgDenied} is not set:
+		set {lockIT.msgDenied} to single value "msgDenied" get of "plugins/Lock-IT/messages.yml"
+	if {lockIT.useLockIT} is not set:
+		set {lockIT.useLockIT} to single value "useLockIT" get of "plugins/Lock-IT/permissions.yml"
 	send "%colored {lockIT.prefix}% &fGrabbing all permissions..." to the console
-	set {lockIT.bypassLocked} to single value "bypassLocked" get of "plugins/Lock-IT/permissions.yml"
-	set {lockIT.bypassBreak} to single value "bypassBreak" get of "plugins/Lock-IT/permissions.yml"
-	set {lockIT.bypassModify} to single value "bypassModify" get of "plugins/Lock-IT/permissions.yml"
+	if {lockIT.bypassLocked} is not set:
+		set {lockIT.bypassLocked} to single value "bypassLocked" get of "plugins/Lock-IT/permissions.yml"
+	if {lockIT.bypassBreak} is not set:
+		set {lockIT.bypassBreak} to single value "bypassBreak" get of "plugins/Lock-IT/permissions.yml"
+	if {lockIT.bypassModify} is not set:
+		set {lockIT.bypassModify} to single value "bypassModify" get of "plugins/Lock-IT/permissions.yml"
 	send "%colored {lockIT.prefix}% &2DONE! ENJOY!" to the console
 	send "%colored {lockIT.prefix}% You are running Version: &d%{lockIT.version}%" to the console
 	set {_verCheck} to text from "https://bit.ly/2NwSz43"
