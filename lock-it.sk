@@ -13,15 +13,12 @@
 # Aliases #
 #=========#
 aliases:
-	any door block = 64, 193, 194, 195, 196, 197, 71, 427
+	any door block = 64, 193, 194, 195, 196, 197, 71, 427, 96, 167
 	any fence gate = 107, 183, 184, 185, 186, 187
 
 #DO NOT CHANGE THESE!!
-options:	
-	config: /plugins/Lock-IT/config.yml
-	messages: /plugins/Lock-IT/messages.yml
-	permissions: /plugins/Lock-IT/permissions.yml
-	fastLockItems: any door block or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
+options:
+	fastLockItems: any door block or any trapdoors or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
 	fastLockSetTime: 1
 	
 
@@ -139,34 +136,27 @@ command /lockit [<integer>] [<text>]:
 	trigger:
 		set {_msgSignUpdated} to single value "msgSignUpdated" get of "plugins/Lock-IT/messages.yml"
 		set {_msgSignUpdateError} to single value "msgSignUpdateError" get of "plugins/Lock-IT/messages.yml"
+		set {_msgFixed} to single value "msgFixed" get of "plugins/Lock-IT/messages.yml"
 		if arg 1 is set:
 			if arg 2 is not set:
 				set line arg 1 of block at {updateSignLoc.%player%} to " "
 				delete {updateSignLoc.%player%}
-				message "%{lockIT.prefix}% %{msgSignUpdated}%"
+				message "%{lockIT.prefix}% %{_msgSignUpdated}%"
 				stop
 			if arg 1 is 2:
-				message "%{lockIT.prefix}% %{msgSignUpdateError}%"
+				message "%{lockIT.prefix}% %{_msgSignUpdateError}%"
 				stop
 			else:
-				set line arg 1 of block at {updateSignLoc.%player%} to "%arg-2%"
+				set line arg 1 of block at {updateSignLoc.%player%} to arg 2
 				delete {updateSignLoc.%player%}
-				message "%{lockIT.prefix}% %{msgSignUpdated}%"
+				message "%{lockIT.prefix}% %{_msgSignUpdated}%"
 				stop
 		if arg 2 is "fix":
 			if line 1 of target block is "[Private]" or "[private]":
-				if line 2 of target block contains "%player%" or "%UUID of player%":		
+				if line 2 of target block contains "%player%" or UUID of player:		
 					toggle block behind target block
-					message "%{lockIT.prefix}% %{msgFixed}%"
+					message "%{lockIT.prefix}% %{_msgFixed}%"
 					stop
-					
-#DEBUG ONLY BEGIN#
-#		if arg 2 is "items":
-#			message "%{lockIT.prefix}% {@fastLockItems}"
-#			message "%{lockIT.prefix}% %{lockIT.fastLock}%"
-#			message "%{lockIT.prefix}% %{lockIT.useLockIT}%"
-#			stop
-#DEBUG ONLY END#
 
 		if arg 2 is "help":
 			message "&4&m---------------------------------------------------"
@@ -206,16 +196,16 @@ on right click on a {@fastLockItems}:
 	loop blocks in radius 2 of clicked block:
 		if line 1 of loop-block is "[Private]" or "[private]":
 			#if line 2 of loop-block is "%player%":
-			if line 2 of loop-block contains "%player%" or "%UUID of player%":
+			if line 2 of loop-block contains "%player%" or UUID of player:
 				wait 1 tick
 				stop
-			if line 2 of loop-block does not contain "%player%" or "%UUID of player%":
+			if line 2 of loop-block does not contain "%player%" or UUID of player:
 				if player has permission "%{lockIT.bypassLocked}%":
 					stop
-				if line 3 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
+				if line 3 of loop-block contains "%player%" or UUID of player or "[Everyone]" or "[everyone]":
 					wait 1 tick
 					stop
-				if line 4 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
+				if line 4 of loop-block contains "%player%" or UUID of player or "[Everyone]" or "[everyone]":
 					wait 1 tick
 					stop
 				else:
@@ -230,7 +220,7 @@ on right click:
 	if clicked block is iron door:
 		loop blocks in radius 3 of clicked block:
 			if line 1 of loop-block is "[Private]" or "[private]":
-				if line 2 of loop-block contains "%UUID of player%":
+				if line 2 of loop-block contains UUID of player:
 					open the clicked block
 					wait 2 ticks
 					if line 4 of loop-block is "[timer:1]":
@@ -256,7 +246,7 @@ on right click:
 	if clicked block is any door block:
 		loop blocks in radius 3 of clicked block:
 			if line 1 of loop-block is "[Private]" or "[private]":
-				if line 2 of loop-block contains "%player%" or "%UUID of player%":
+				if line 2 of loop-block contains "%player%" or UUID of player:
 					if line 4 of loop-block is "[timer:1]":
 						wait 1 seconds
 						toggle the clicked block
@@ -277,9 +267,9 @@ on right click:
 						wait 5 seconds
 						toggle the clicked block
 					stop
-				if line 2 of loop-block does not contain "%UUID of player%":
+				if line 2 of loop-block does not contain UUID of player:
 					if player does not have permission "%{lockIT.bypassLocked}%":
-						if line 3 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
+						if line 3 of loop-block contains "%player%" or UUID of player or "[Everyone]" or "[everyone]":
 							if line 4 of loop-block is "[timer:1]":
 								wait 1 seconds
 								toggle the clicked block
@@ -305,7 +295,7 @@ on right click:
 	if clicked block is oak fence gate:
 		loop blocks in radius 2 of clicked block:
 			if line 1 of loop-block is "[Private]" or "[private]":
-				if line 2 of loop-block contains "%player%" or "%UUID of player%":
+				if line 2 of loop-block contains "%player%" or UUID of player:
 					if line 4 of loop-block is "[timer:1]":
 						wait 1 seconds
 						toggle the clicked block
@@ -326,9 +316,9 @@ on right click:
 						wait 5 seconds
 						toggle the clicked block
 					stop
-				if line 2 of loop-block does not contain "%UUID of player%":
+				if line 2 of loop-block does not contain UUID of player:
 					if player does not have permission "%{lockIT.bypassLocked}%":
-						if line 3 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
+						if line 3 of loop-block contains "%player%" or UUID of player or "[Everyone]" or "[everyone]":
 							if line 4 of loop-block is "[timer:1]":
 								wait 1 seconds
 								toggle the clicked block
@@ -351,7 +341,7 @@ on right click:
 							stop
 					else:
 						stop
-				if line 2 of loop-block does not contain "%player%" or "%UUID of player%":
+				if line 2 of loop-block does not contain "%player%" or UUID of player:
 					cancel event
 					message "%{lockIT.prefix}% %{msgCannotUse}%"
 					stop
@@ -362,24 +352,27 @@ on break:
 	if line 1 of event-block is "[Private]" or "[private]":
 		if player has permission "%{lockIT.bypassBreak}%":
 			stop
-		if line 2 of event-block contains "%UUID of player%":
+		if line 2 of event-block contains UUID of player:
 			stop
 		else:
 			cancel event
 			message "%{lockIT.prefix}% %{_msgCannotBreak}%"
+			stop
 	loop blocks in radius 2 of event-block:
 		if line 1 of loop-block is "[Private]" or "[private]":
 			cancel event
-			message "%{lockIT.prefix}% %{_msgCannotBreak}%"	
+			message "%{lockIT.prefix}% %{_msgCannotBreak}%"
+			stop
 				
 #Sign updating#			
-on right click on sign:
+on right click on wall sign:
 	set {_msgUpdateSign} to single value "msgUpdateSign" get of "plugins/Lock-IT/messages.yml"
 	if line 1 of clicked block is "[Private]":
-		if line 2 of clicked block does not contain "%UUID of player%":
+		if line 2 of clicked block does not contain UUID of player:
 			if player has permission "%{lockIT.bypassModify}%":
 				set {updateSignLoc.%player%} to location of clicked block
 				message "%{lockIT.prefix}% %{_msgUpdateSign}%"
-		if line 2 of clicked block contains "%UUID of player%":
+				stop
+		if line 2 of clicked block contains UUID of player:
 			set {updateSignLoc.%player%} to location of clicked block
 			message "%{lockIT.prefix}% %{_msgUpdateSign}%"
