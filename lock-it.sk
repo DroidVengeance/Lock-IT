@@ -27,12 +27,11 @@ options:
 	messages: /plugins/Lock-IT/messages.yml
 	permissions: /plugins/Lock-IT/permissions.yml
 	fastLockItems: any door block or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
-	fastLockSetTime: 1 
+	fastLockSetTime: 1
 	
 
 #Generate all the files and load variables#
 on script load:
-	set {lockIT.version} to single value "version" get of "plugins/Lock-IT/config.yml"
 	send "&c&m-----------------------------------------------------" to the console
 	send "&6&l.____                  __             .______________" to the console
 	send "&6&l|    |    ____   ____ |  | __         |   \__    ___/" to the console
@@ -40,7 +39,7 @@ on script load:
 	send "&6&l|    |__(  <_> )  \___|    <  /_____/ |   | |    |   " to the console
 	send "&6&l|_______ \____/ \___  >__|_ \         |___| |____|   " to the console
 	send "&6&l        \/          \/     \/                        " to the console
-	send "&c&m-------------------&fVersion %{lockIT.version}%&c&m----------------------" to the console
+	send "&c&m-----------------------------------------------------" to the console
 	if folder "plugins/Lock-IT" doesn't exists:
 		create folder "plugins/Lock-IT"
 		send "%colored {lockIT.prefix}% &fCreating folder..." to the console
@@ -60,6 +59,7 @@ on script load:
 	set {lockIT.fastLock} to single value "fastLock" get of "plugins/Lock-IT/config.yml"
 	set {lockIT.fastLockSetTime} to single value "fastLockSetTime" get of "plugins/Lock-IT/config.yml"
 	set {lockIT.fastLockItems} to single value "fastLockItems" get of "plugins/Lock-IT/config.yml"
+	set {lockIT.version} to single value "version" get of "plugins/Lock-IT/config.yml"
 	send "%colored {lockIT.prefix}% &fGrabbing all messages..." to the console
 	set {lockIT.msgAlreadyLocked} to single value "msgAlreadyLocked" get of "plugins/Lock-IT/messages.yml"
 	set {lockIT.msgLocked} to single value "msgLocked" get of "plugins/Lock-IT/messages.yml"
@@ -70,6 +70,7 @@ on script load:
 	set {lockIT.bypassBreak} to single value "bypassBreak" get of "plugins/Lock-IT/permissions.yml"
 	set {lockIT.bypassModify} to single value "bypassModify" get of "plugins/Lock-IT/permissions.yml"
 	send "%colored {lockIT.prefix}% &2DONE! ENJOY!" to the console
+	send "%colored {lockIT.prefix}% You are running Version: &d%{lockIT.version}%" to the console
 
 
 
