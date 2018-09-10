@@ -11,7 +11,7 @@ Lock-IT is a skript coded replacement for the popular Lockette plugin https://ww
 - <code>/lockit</code>
 - <code>/lockit help</code>
 - <code>/lockit fix</code>
-- <code>/lockit <line#> <text></code>
+- <code>/lockit [line#] [text]</code>
 
 <strong>Why Lock-IT?</strong>
 - ease of use
