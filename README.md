@@ -9,9 +9,12 @@ Lock-IT is a skript coded replacement for the popular Lockette plugin https://ww
 - simple to modify
 - add any item you want protected
 
-<strong>Lock-IT - Pros</strong>
-- No database. All information required for a lock is on the sign.
+<strong>Lock-IT - Features</strong>
+- No database.
 - Full UUID support.
 - Messages are editable.
 - Permissions are editable.
 - Customizable.
+
+<strong>Need Help?</strong>
+- <a href="https://helpdesk.droidvengeance.com">Submit a Ticket</a>
