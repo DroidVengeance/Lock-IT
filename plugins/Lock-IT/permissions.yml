@@ -6,4 +6,19 @@
 #        \/          \/     \/                       
 
 #Lock-IT by DroidVengeance
-#A Skript alternative to the popular "Lockette" plugin
+#A Skript alternative to the popular Lockette plugin
+#https://www.spigotmc.org/resources/lockette-uuid-supported.3054/
+
+#Set your desired permissions below
+
+#Required for players to use and protect chests or items.
+useLockIT: lockit.use.player
+
+#Allows Staff to bypass locked chests
+bypassLocked: lockit.bypass.locked
+
+#Allows Staff to break protected containers
+bypassBreak: lockit.bypass.break
+
+#Allows Staff to modify protected container signs
+bypassModify: lockit.bypass.modify

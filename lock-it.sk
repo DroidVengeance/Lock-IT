@@ -5,40 +5,85 @@
 #|_______ \____/ \___  >__|_ \         |___| |____|   
 #        \/          \/     \/                       
 
-#Lock-IT! by DroidVengeance
-#A Skript alternative to the popular "Lockette" plugin
-options:
+#Lock-IT by DroidVengeance
+#A Skript alternative to the popular Lockette plugin
+#https://www.spigotmc.org/resources/lockette-uuid-supported.3054/
 
-#========
-#Settings
-#========
-	fastlockitems: any door block or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
-	fastlocksettime: 1 #In seconds
-	fastlock: true #If TRUE, shift+right clicking a chest while holding a sign will private the chest automatically
-	prefix: &4[&6Lock-IT&4]
-#========	
-#Messages
-#========
-	msgalreadylocked: This container is already locked!
-	msglocked: You have locked this container!
-	msgdenied: This container doesn't belong to you!
-#===========
-#Permissions
-#===========
-	uselockit: lockit.player
-	bypasslocked: lockit.bypass.locked #Allows Staff to bypass locked chests
-	bypassbreak: lockit.bypass.break #Allows Staff to break protected containers
-	bypassmodify: lockit.bypass.modify #Allows Staff to modify protected container signs
-#=======	
-aliases:
-#=======
-	any door block = 64, 193, 194, 195, 196, 197, 71, 427
-	any fence gate = 107, 183, 184, 185, 186, 187
-#========
-#Command 
-#========
+#=========#
+# Command #
+#=========#
 # /lockit <line number> <text>
 
+#=========#	
+# Aliases #
+#=========#
+aliases:
+	any door block = 64, 193, 194, 195, 196, 197, 71, 427
+	any fence gate = 107, 183, 184, 185, 186, 187
+
+options:	
+
+	config: /plugins/Lock-IT/config.yml
+	messages: /plugins/Lock-IT/messages.yml
+	permissions: /plugins/Lock-IT/permissions.yml
+	
+#==========#
+# Settings #
+#==========#
+	fastLockItems: any door block or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
+	fastLockSetTime: 1 #In seconds
+	fastLock: true #If TRUE, shift+right clicking a chest while holding a sign will private the chest automatically
+	prefix: &4[&6Lock-IT&4]
+	
+#==========#	
+# Messages #
+#==========#
+	msgAlreadyLocked: This container is already locked!
+	msgLocked: You have locked this container!
+	msgDenied: This container doesn't belong to you!
+	
+#=============#
+# Permissions #
+#=============#
+	useLockIt: lockit.use.player
+	bypassLocked: lockit.bypass.locked #Allows Staff to bypass locked chests
+	bypassBreak: lockit.bypass.break #Allows Staff to break protected containers
+	bypassModify: lockit.bypass.modify #Allows Staff to modify protected container signs
+	
+
+
+on script load:
+	if folder "plugins/Lock-IT" doesn't exists:
+		create folder "plugins/Lock-IT"
+		send "%{lockIT.prefix}% &aCreating folder..." to the console
+	if file "plugins/Lock-IT/config.yml" doesn't exists:
+		download from "https://bit.ly/2wPjcH5" to "plugins/Lock-IT/config.yml"
+		send "%{lockIT.prefix}% &aGenerating config.yml..." to the console
+	if file "plugins/Lock-IT/permissions.yml" doesn't exists:
+		download from "https://bit.ly/2wU6sPI" to "plugins/Lock-IT/permissions.yml"
+		send "%{lockIT.prefix}% &aGenereating permissions.yml..." to the console
+	if file "plugins/Lock-IT/messages.yml" doesn't exists:
+		download from "https://bit.ly/2Np2SY5" to "plugins/Lock-IT/messages.yml"
+		send "%{lockIT.prefix}% &aGenerating messages.yml..." to the console
+	set {lockIT.prefix} to single value "prefix" get of "plugins/Lock-IT/config.yml"
+	set {lockIT.fastLock} to single value "fastLock" get of "plugins/Lock-IT/config.yml"
+	set {lockIT.fastLockSetTime} to single value "fastLockSetTime" get of "plugins/Lock-IT/config.yml"
+	set {lockIT.fastLockItems} to single value "fastLockItems" get of "plugins/Lock-IT/config.yml"
+	set {lockIT.msgAlreadyLocked} to single value "msgAlreadyLocked" get of "plugins/Lock-IT/messages.yml"
+	set {lockIT.msgLocked} to single value "msgLocked" get of "plugins/Lock-IT/messages.yml"
+	set {lockIT.msgDenied} to single value "msgDenied" get of "plugins/Lock-IT/messages.yml"
+	set {lockIT.useLockIT} to single value "useLockIT" get of "plugins/Lock-IT/permissions.yml"
+	set {lockIT.bypassLocked} to single value "bypassLocked" get of "plugins/Lock-IT/permissions.yml"
+	set {lockIT.bypassBreak} to single value "bypassBreak" get of "plugins/Lock-IT/permissions.yml"
+	set {lockIT.bypassModify} to single value "bypassModify" get of "plugins/Lock-IT/permissions.yml"
+	send "&c&m-----------------------------------------------------" to the console
+	send "&6&l.____                  __             .______________" to the console
+	send "&6&l|    |    ____   ____ |  | __         |   \__    ___/" to the console
+	send "&6&l|    |   /  _ \_/ ___\|  |/ /  ______ |   | |    |   " to the console
+	send "&6&l|    |__(  <_> )  \___|    <  /_____/ |   | |    |   " to the console
+	send "&6&l|_______ \____/ \___  >__|_ \         |___| |____|   " to the console
+	send "&6&l        \/          \/     \/                        " to the console
+	send "&c&m-----------------------------------------------------" to the console
 
 
 
@@ -97,37 +142,37 @@ command /lockit [<integer>] [<text>]:
 			if arg 2 is not set:
 				set line arg 1 of block at {updateSignLoc.%player%} to " "
 				delete {updateSignLoc.%player%}
-				message "{@prefix} &esign updated!"
+				message "%{lockIT.prefix}% &esign updated!"
 				stop
 			if arg 1 is 2:
-				message "{@prefix} &cYou can't change the owner's name!"
+				message "%{lockIT.prefix}% &cYou can't change the owner's name!"
 				stop
 			else:
 				set line arg 1 of block at {updateSignLoc.%player%} to "%arg-2%"
 				delete {updateSignLoc.%player%}
-				message "{@prefix} &esign updated!"
+				message "%{lockIT.prefix}% &esign updated!"
 				stop
 		if arg 2 is "fix":
 			if line 1 of target block is "[Private]" or "[private]":
 				if line 2 of target block contains "%player%" or "%UUID of player%":		
 					toggle block behind target block
-					message "{@prefix} &eFixed"
+					message "%{lockIT.prefix}% &eFixed"
 					stop
 		if arg 2 is "items":
-			message "{@fastlockitems}"
+			message "%{lockIT.prefix}% %{lockIT.fastLockItems}%"
 			stop
 		if arg 2 is "help":
 			message "&4&m---------------------------------------------------"
-			message "{@prefix} &eby DroidVengeance"
+			message "%{lockIT.prefix}% &eby DroidVengeance"
 			message "&4&m---------------------------------------------------"
-			message "{@prefix} &eShift+Rightclicking while holding a sign, will automatically lock those items."
-			message "{@prefix} &eTo edit a sign, rightclick and use:"
+			message "%{lockIT.prefix}% &eShift+Rightclicking while holding a sign, will automatically lock those items."
+			message "%{lockIT.prefix}% &eTo edit a sign, rightclick and use:"
 			message "&e/lockit <line number> <text>"
-			message "{@prefix} &eTo fix a door use:"
+			message "%{lockIT.prefix}% &eTo fix a door use:"
 			message "&e/lockit fix"
 			stop
 		if arg 1 is not set:
-			message "{@prefix} &eRight click the sign you want to update"
+			message "%{lockIT.prefix}% &eRight click the sign you want to update"
 			message "&eThen use /lockit <line number> <text>"
 			stop
 				
@@ -137,21 +182,21 @@ command /lockit [<integer>] [<text>]:
 #FASTLOCK
 on place of wall sign:
 	if player is sneaking:
-		if {@fastlock} is true:
-			if player has permission "lockit.player":
+		if {lockIT.fastLock} is true:
+			if player has permission "%{lockIT.useLockIT}%":
 				if line 1 of block is "[Private]" or "[private]":
 					cancel event
-					message "{@prefix} &c{@msgalreadylocked}"
-				if block behind event-block is a {@fastlockitems}:
+					message "%{lockIT.prefix}% &c%{lockIT.msgAlreadyLocked}%"
+				if block behind event-block is a {lockIT.fastLockItems}:
 					close player's inventory
-					wait {@fastlocksettime} seconds
+					wait {lockIT.fastLockSetTime} seconds
 					set line 1 of block to "[Private]"
 					set line 2 of block to "%player%            %UUID of player%"
-					message "{@prefix} &e{@msglocked}"
+					message "%{lockIT.prefix}% &e%{lockIT.msgLocked}%"
 					stop
 
 #ITEM PROTECTION WHILE LOCKED					
-on right click on a {@fastlockitems}:
+on right click on a {lockIT.fastLockItems}:
 	loop blocks in radius 2 of clicked block:
 		if line 1 of loop-block is "[Private]" or "[private]":
 			#if line 2 of loop-block is "%player%":
@@ -159,7 +204,7 @@ on right click on a {@fastlockitems}:
 				wait 1 tick
 				stop
 			if line 2 of loop-block does not contain "%player%" or "%UUID of player%":
-				if player has permission "{@bypasslocked}":
+				if player has permission "%{lockIT.bypassLocked}%":
 					stop
 				if line 3 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
 					wait 1 tick
@@ -169,7 +214,7 @@ on right click on a {@fastlockitems}:
 					stop
 				else:
 					cancel event
-					message "{@prefix} &c{@msgdenied}"
+					message "%{lockIT.prefix}% &c%{lockIT.msgDenied}%"
 					stop
 				
 
@@ -226,7 +271,7 @@ on right click:
 						toggle the clicked block
 					stop
 				if line 2 of loop-block does not contain "%UUID of player%":
-					if player does not have permission "lockit.bypass.locked":
+					if player does not have permission "%{lockIT.bypassLocked}%":
 						if line 3 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
 							if line 4 of loop-block is "[timer:1]":
 								wait 1 seconds
@@ -275,7 +320,7 @@ on right click:
 						toggle the clicked block
 					stop
 				if line 2 of loop-block does not contain "%UUID of player%":
-					if player does not have permission "lockit.bypass.locked":
+					if player does not have permission "%{lockIT.bypassLocked}%":
 						if line 3 of loop-block contains "%player%" or "%UUID of player%" or "[Everyone]" or "[everyone]":
 							if line 4 of loop-block is "[timer:1]":
 								wait 1 seconds
@@ -301,19 +346,19 @@ on right click:
 						stop
 				if line 2 of loop-block does not contain "%player%" or "%UUID of player%":
 					cancel event
-					message "{@prefix} &cSorry, you can't use that."
+					message "%{lockIT.prefix}% &cSorry, you can't use that."
 					stop
 				
 #BREAKING LOCK-IT SIGNS AND CONTAINERS
 on break:
 	if line 1 of event-block is "[Private]" or "[private]":
-		if player has permission "{@bypassbreak}":
+		if player has permission "%{lockIT.bypassBreak}%":
 			stop
 		if line 2 of event-block contains "%UUID of player%":
 			stop
 		else:
 			cancel event
-			message "{@prefix} &cYou cannot break this container"
+			message "%{lockIT.prefix}% &cYou cannot break this container"
 	loop blocks in radius 2 of event-block:
 		if line 1 of loop-block is "[Private]" or "[private]":
 		#	if player has permission "{@bypassbreak}":
@@ -322,7 +367,7 @@ on break:
 		#		stop
 		#	else:
 			cancel event
-			message "{@prefix} &cYou cannot break this container"
+			message "%{lockIT.prefix}% &cYou cannot break this container"
 #			if line 2 of loop-block does not contain "%UUID of player%":
 #				if player does not have permission "{@bypassbreak}":
 #					cancel event
@@ -333,12 +378,12 @@ on break:
 on right click on sign:
 	if line 1 of clicked block is "[Private]":
 		if line 2 of clicked block does not contain "%UUID of player%":
-			if player has permission "{@bypassmodify}":
+			if player has permission "%{lockIT.bypassModify}%":
 				set {updateSignLoc.%player%} to location of clicked block
-				message "{@prefix} &6Update your sign: &e/lockit <line number> <text>"
+				message "%{lockIT.prefix}% &6Update your sign: &e/lockit <line number> <text>"
 		if line 2 of clicked block contains "%UUID of player%":
 			set {updateSignLoc.%player%} to location of clicked block
-			message "{@prefix} &6Update your sign: &e/lockit <line number> <text>"
+			message "%{lockIT.prefix}% &6Update your sign: &e/lockit <line number> <text>"
 
 	
 	
