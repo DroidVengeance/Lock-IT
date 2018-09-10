@@ -22,4 +22,11 @@ msgLocked: You have locked this container!
 #This will be displayed when a player tries to open
 #a protected container or item if their name is NOT
 #on the sign.
-msgDenied: This container doesn't belong to you!
+msgDenied: This container does not belong to you!
+
+msgCannotBreak: '&cYou cannot break this container!'
+msgUpdateSign: '&6Update your sign: &e/lockit <line number> <text>'
+msgCannotUse: '&cSorry, you cannot use that.'
+msgFixed: '&eFixed'
+msgSignUpdated: '&eSign updated successfully!'
+msgSignUpdateError: '&cYou cannot change the owner's name!'

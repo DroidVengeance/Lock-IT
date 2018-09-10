@@ -130,29 +130,35 @@ on script load:
 command /lockit [<integer>] [<text>]:
 	permission: {lockIT.useLockIT}
 	trigger:
+	set {_msgSignUpdated} to single value "msgSignUpdated" get of "plugins/Lock-IT/messages.yml"
+	set {_msgSignUpdateError} to single value "msgSignUpdateError" get of "plugins/Lock-IT/messages.yml"
 		if arg 1 is set:
 			if arg 2 is not set:
 				set line arg 1 of block at {updateSignLoc.%player%} to " "
 				delete {updateSignLoc.%player%}
-				message "%{lockIT.prefix}% &esign updated!"
+				message "%{lockIT.prefix}% %{msgSignUpdated}%"
 				stop
 			if arg 1 is 2:
-				message "%{lockIT.prefix}% &cYou can't change the owner's name!"
+				message "%{lockIT.prefix}% %{msgSignUpdateError}%"
 				stop
 			else:
 				set line arg 1 of block at {updateSignLoc.%player%} to "%arg-2%"
 				delete {updateSignLoc.%player%}
-				message "%{lockIT.prefix}% &esign updated!"
+				message "%{lockIT.prefix}% %{msgSignUpdated}%"
 				stop
 		if arg 2 is "fix":
 			if line 1 of target block is "[Private]" or "[private]":
 				if line 2 of target block contains "%player%" or "%UUID of player%":		
 					toggle block behind target block
-					message "%{lockIT.prefix}% &eFixed"
+					message "%{lockIT.prefix}% %{msgFixed}%"
 					stop
+					
+#DEBUG ONLY BEGIN#
 		if arg 2 is "items":
 			message "%{lockIT.prefix}% %{lockIT.fastLockItems}%"
 			stop
+#DEBUG ONLY END#
+
 		if arg 2 is "help":
 			message "&4&m---------------------------------------------------"
 			message "%{lockIT.prefix}% &eby DroidVengeance"
@@ -212,6 +218,7 @@ on right click on {@fastLockItems}:
 
 #Timers	
 on right click:
+	set {_msgCannotUse} to single value "msgCannotUse" get of "plugins/Lock-IT/messages.yml"
 	if clicked block is iron door:
 		loop blocks in radius 3 of clicked block:
 			if line 1 of loop-block is "[Private]" or "[private]":
@@ -239,6 +246,7 @@ on right click:
 						close the clicked block
 						stop
 	if clicked block is any door block:
+	set {_msgCannotUse} to single value "msgCannotUse" get of "plugins/Lock-IT/messages.yml"
 		loop blocks in radius 3 of clicked block:
 			if line 1 of loop-block is "[Private]" or "[private]":
 				if line 2 of loop-block contains "%player%" or "%UUID of player%":
@@ -338,11 +346,12 @@ on right click:
 						stop
 				if line 2 of loop-block does not contain "%player%" or "%UUID of player%":
 					cancel event
-					message "%{lockIT.prefix}% &cSorry, you can't use that."
+					message "%{lockIT.prefix}% %{msgCannotUse}%"
 					stop
 				
 #Protection mechanics#
 on break:
+	set {_msgCannotBreak} to single value "msgCannotBreak" get of "plugins/Lock-IT/messages.yml"
 	if line 1 of event-block is "[Private]" or "[private]":
 		if player has permission "%{lockIT.bypassBreak}%":
 			stop
@@ -350,7 +359,7 @@ on break:
 			stop
 		else:
 			cancel event
-			message "%{lockIT.prefix}% &cYou cannot break this container"
+			message "%{lockIT.prefix}% %{_msgCannotBreak}%"
 	loop blocks in radius 2 of event-block:
 		if line 1 of loop-block is "[Private]" or "[private]":
 		#	if player has permission "{@bypassbreak}":
@@ -359,7 +368,7 @@ on break:
 		#		stop
 		#	else:
 			cancel event
-			message "%{lockIT.prefix}% &cYou cannot break this container"
+			message "%{lockIT.prefix}% %{_msgCannotBreak}%"
 #			if line 2 of loop-block does not contain "%UUID of player%":
 #				if player does not have permission "{@bypassbreak}":
 #					cancel event
@@ -368,14 +377,15 @@ on break:
 				
 #Sign updating#			
 on right click on sign:
+	set {_msgUpdateSign} to single value "msgUpdateSign" get of "plugins/Lock-IT/messages.yml"
 	if line 1 of clicked block is "[Private]":
 		if line 2 of clicked block does not contain "%UUID of player%":
 			if player has permission "%{lockIT.bypassModify}%":
 				set {updateSignLoc.%player%} to location of clicked block
-				message "%{lockIT.prefix}% &6Update your sign: &e/lockit <line number> <text>"
+				message "%{lockIT.prefix}% %{msgUpdateSign}%"
 		if line 2 of clicked block contains "%UUID of player%":
 			set {updateSignLoc.%player%} to location of clicked block
-			message "%{lockIT.prefix}% &6Update your sign: &e/lockit <line number> <text>"
+			message "%{lockIT.prefix}% %{msgUpdateSign}%"
 
 	
 	
