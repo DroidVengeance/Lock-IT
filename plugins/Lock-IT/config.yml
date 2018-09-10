@@ -12,15 +12,10 @@
 
 #Fast Lock - #If TRUE, shift+right clicking a chest while 
 #holding a sign will private the chest automatically.
-fastLock: true 
-
-#Fast Lock Items - Add any items you want protected to this list.
-#fastLockItems: 'any door block or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox'
-
-#Fast Lock Set Time - This is the delay (in seconds) between 
-#shift+right clicking a chest while holding a sign and the
-#chest actually being locked.
-#fastLockSetTime: '1'
+fastLock: true
 
 #Prefix - Set the desired prefix for all messages here.
 prefix: '&4[&6Lock-IT&4]'
+
+#Version - Do not change this!
+version: '2.0'

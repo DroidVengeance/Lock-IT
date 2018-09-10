@@ -21,37 +21,18 @@ aliases:
 	any door block = 64, 193, 194, 195, 196, 197, 71, 427
 	any fence gate = 107, 183, 184, 185, 186, 187
 
+#DO NOT CHANGE THESE!!
 options:	
 	config: /plugins/Lock-IT/config.yml
 	messages: /plugins/Lock-IT/messages.yml
 	permissions: /plugins/Lock-IT/permissions.yml
-	
-#==========#
-# Settings #
-#==========#
 	fastLockItems: any door block or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
-	fastLockSetTime: 1 #In seconds
-#	fastLock: true #If TRUE, shift+right clicking a chest while holding a sign will private the chest automatically
-#	prefix: &4[&6Lock-IT&4]
-	
-#==========#	
-# Messages #
-#==========#
-#	msgAlreadyLocked: This container is already locked!
-#	msgLocked: You have locked this container!
-#	msgDenied: This container doesn't belong to you!
-	
-#=============#
-# Permissions #
-#=============#
-#	useLockIt: lockit.use.player
-#	bypassLocked: lockit.bypass.locked #Allows Staff to bypass locked chests
-#	bypassBreak: lockit.bypass.break #Allows Staff to break protected containers
-#	bypassModify: lockit.bypass.modify #Allows Staff to modify protected container signs
+	fastLockSetTime: 1 
 	
 
 #Generate all the files and load variables#
 on script load:
+	set {lockIT.version} to single value "version" get of "plugins/Lock-IT/config.yml"
 	send "&c&m-----------------------------------------------------" to the console
 	send "&6&l.____                  __             .______________" to the console
 	send "&6&l|    |    ____   ____ |  | __         |   \__    ___/" to the console
@@ -59,7 +40,7 @@ on script load:
 	send "&6&l|    |__(  <_> )  \___|    <  /_____/ |   | |    |   " to the console
 	send "&6&l|_______ \____/ \___  >__|_ \         |___| |____|   " to the console
 	send "&6&l        \/          \/     \/                        " to the console
-	send "&c&m-----------------------------------------------------" to the console
+	send "&c&m-------------------&fVersion %{lockIT.version}%&c&m----------------------" to the console
 	if folder "plugins/Lock-IT" doesn't exists:
 		create folder "plugins/Lock-IT"
 		send "%colored {lockIT.prefix}% &fCreating folder..." to the console
