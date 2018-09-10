@@ -22,7 +22,6 @@ aliases:
 	any fence gate = 107, 183, 184, 185, 186, 187
 
 options:	
-
 	config: /plugins/Lock-IT/config.yml
 	messages: /plugins/Lock-IT/messages.yml
 	permissions: /plugins/Lock-IT/permissions.yml
@@ -53,29 +52,6 @@ options:
 
 #Generate all the files and load variables#
 on script load:
-	if folder "plugins/Lock-IT" doesn't exists:
-		create folder "plugins/Lock-IT"
-		send "%{lockIT.prefix}% &aCreating folder..." to the console
-	if file "plugins/Lock-IT/config.yml" doesn't exists:
-		download from "https://bit.ly/2MXFaCN" to "plugins/Lock-IT/config.yml"
-		send "%{lockIT.prefix}% &aGenerating config.yml..." to the console
-	if file "plugins/Lock-IT/permissions.yml" doesn't exists:
-		download from "https://bit.ly/2QiZ355" to "plugins/Lock-IT/permissions.yml"
-		send "%{lockIT.prefix}% &aGenereating permissions.yml..." to the console
-	if file "plugins/Lock-IT/messages.yml" doesn't exists:
-		download from "https://bit.ly/2CCG42G" to "plugins/Lock-IT/messages.yml"
-		send "%{lockIT.prefix}% &aGenerating messages.yml..." to the console
-	set {lockIT.prefix} to single value "prefix" get of "plugins/Lock-IT/config.yml"
-	set {lockIT.fastLock} to single value "fastLock" get of "plugins/Lock-IT/config.yml"
-	set {lockIT.fastLockSetTime} to single value "fastLockSetTime" get of "plugins/Lock-IT/config.yml"
-	set {lockIT.fastLockItems} to single value "fastLockItems" get of "plugins/Lock-IT/config.yml"
-	set {lockIT.msgAlreadyLocked} to single value "msgAlreadyLocked" get of "plugins/Lock-IT/messages.yml"
-	set {lockIT.msgLocked} to single value "msgLocked" get of "plugins/Lock-IT/messages.yml"
-	set {lockIT.msgDenied} to single value "msgDenied" get of "plugins/Lock-IT/messages.yml"
-	set {lockIT.useLockIT} to single value "useLockIT" get of "plugins/Lock-IT/permissions.yml"
-	set {lockIT.bypassLocked} to single value "bypassLocked" get of "plugins/Lock-IT/permissions.yml"
-	set {lockIT.bypassBreak} to single value "bypassBreak" get of "plugins/Lock-IT/permissions.yml"
-	set {lockIT.bypassModify} to single value "bypassModify" get of "plugins/Lock-IT/permissions.yml"
 	send "&c&m-----------------------------------------------------" to the console
 	send "&6&l.____                  __             .______________" to the console
 	send "&6&l|    |    ____   ____ |  | __         |   \__    ___/" to the console
@@ -84,6 +60,35 @@ on script load:
 	send "&6&l|_______ \____/ \___  >__|_ \         |___| |____|   " to the console
 	send "&6&l        \/          \/     \/                        " to the console
 	send "&c&m-----------------------------------------------------" to the console
+	if folder "plugins/Lock-IT" doesn't exists:
+		create folder "plugins/Lock-IT"
+		send "%colored {lockIT.prefix}% &fCreating folder..." to the console
+	if file "plugins/Lock-IT/config.yml" doesn't exists:
+		download from "https://bit.ly/2MXFaCN" to "plugins/Lock-IT/config.yml"
+		send "%colored {lockIT.prefix}% &fGenerating config.yml..." to the console
+	if file "plugins/Lock-IT/permissions.yml" doesn't exists:
+		download from "https://bit.ly/2QiZ355" to "plugins/Lock-IT/permissions.yml"
+		send "%colored {lockIT.prefix}% &fGenereating permissions.yml..." to the console
+	if file "plugins/Lock-IT/messages.yml" doesn't exists:
+		download from "https://bit.ly/2CCG42G" to "plugins/Lock-IT/messages.yml"
+		send "%colored {lockIT.prefix}% &fGenerating messages.yml..." to the console
+		send "%colored {lockIT.prefix}% &2DONE!!" to the console
+		send "" to the console
+	send "%colored {lockIT.prefix}% &fGrabbing settings from the config..." to the console
+	set {lockIT.prefix} to single value "prefix" get of "plugins/Lock-IT/config.yml"
+	set {lockIT.fastLock} to single value "fastLock" get of "plugins/Lock-IT/config.yml"
+	set {lockIT.fastLockSetTime} to single value "fastLockSetTime" get of "plugins/Lock-IT/config.yml"
+	set {lockIT.fastLockItems} to single value "fastLockItems" get of "plugins/Lock-IT/config.yml"
+	send "%colored {lockIT.prefix}% &fGrabbing all messages..." to the console
+	set {lockIT.msgAlreadyLocked} to single value "msgAlreadyLocked" get of "plugins/Lock-IT/messages.yml"
+	set {lockIT.msgLocked} to single value "msgLocked" get of "plugins/Lock-IT/messages.yml"
+	set {lockIT.msgDenied} to single value "msgDenied" get of "plugins/Lock-IT/messages.yml"
+	set {lockIT.useLockIT} to single value "useLockIT" get of "plugins/Lock-IT/permissions.yml"
+	send "%colored {lockIT.prefix}% &fGrabbing all permissions..." to the console
+	set {lockIT.bypassLocked} to single value "bypassLocked" get of "plugins/Lock-IT/permissions.yml"
+	set {lockIT.bypassBreak} to single value "bypassBreak" get of "plugins/Lock-IT/permissions.yml"
+	set {lockIT.bypassModify} to single value "bypassModify" get of "plugins/Lock-IT/permissions.yml"
+	send "%colored {lockIT.prefix}% &2DONE! ENJOY!" to the console
 
 
 
