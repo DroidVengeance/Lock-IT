@@ -32,38 +32,38 @@ options:
 #==========#
 	fastLockItems: any door block or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
 	fastLockSetTime: 1 #In seconds
-	fastLock: true #If TRUE, shift+right clicking a chest while holding a sign will private the chest automatically
-	prefix: &4[&6Lock-IT&4]
+#	fastLock: true #If TRUE, shift+right clicking a chest while holding a sign will private the chest automatically
+#	prefix: &4[&6Lock-IT&4]
 	
 #==========#	
 # Messages #
 #==========#
-	msgAlreadyLocked: This container is already locked!
-	msgLocked: You have locked this container!
-	msgDenied: This container doesn't belong to you!
+#	msgAlreadyLocked: This container is already locked!
+#	msgLocked: You have locked this container!
+#	msgDenied: This container doesn't belong to you!
 	
 #=============#
 # Permissions #
 #=============#
-	useLockIt: lockit.use.player
-	bypassLocked: lockit.bypass.locked #Allows Staff to bypass locked chests
-	bypassBreak: lockit.bypass.break #Allows Staff to break protected containers
-	bypassModify: lockit.bypass.modify #Allows Staff to modify protected container signs
+#	useLockIt: lockit.use.player
+#	bypassLocked: lockit.bypass.locked #Allows Staff to bypass locked chests
+#	bypassBreak: lockit.bypass.break #Allows Staff to break protected containers
+#	bypassModify: lockit.bypass.modify #Allows Staff to modify protected container signs
 	
 
-
+#Generate all the files and load variables#
 on script load:
 	if folder "plugins/Lock-IT" doesn't exists:
 		create folder "plugins/Lock-IT"
 		send "%{lockIT.prefix}% &aCreating folder..." to the console
 	if file "plugins/Lock-IT/config.yml" doesn't exists:
-		download from "https://bit.ly/2wPjcH5" to "plugins/Lock-IT/config.yml"
+		download from "https://bit.ly/2MXFaCN" to "plugins/Lock-IT/config.yml"
 		send "%{lockIT.prefix}% &aGenerating config.yml..." to the console
 	if file "plugins/Lock-IT/permissions.yml" doesn't exists:
-		download from "https://bit.ly/2wU6sPI" to "plugins/Lock-IT/permissions.yml"
+		download from "https://bit.ly/2QiZ355" to "plugins/Lock-IT/permissions.yml"
 		send "%{lockIT.prefix}% &aGenereating permissions.yml..." to the console
 	if file "plugins/Lock-IT/messages.yml" doesn't exists:
-		download from "https://bit.ly/2Np2SY5" to "plugins/Lock-IT/messages.yml"
+		download from "https://bit.ly/2CCG42G" to "plugins/Lock-IT/messages.yml"
 		send "%{lockIT.prefix}% &aGenerating messages.yml..." to the console
 	set {lockIT.prefix} to single value "prefix" get of "plugins/Lock-IT/config.yml"
 	set {lockIT.fastLock} to single value "fastLock" get of "plugins/Lock-IT/config.yml"
@@ -134,9 +134,9 @@ on script load:
 	
 
 	
-
+#Commands#
 command /lockit [<integer>] [<text>]:
-	permission: lockit.player
+	permission: {lockIT.useLockIT}
 	trigger:
 		if arg 1 is set:
 			if arg 2 is not set:
@@ -179,7 +179,7 @@ command /lockit [<integer>] [<text>]:
 			
 
 
-#FASTLOCK
+#Fast Lock#
 on place of wall sign:
 	if player is sneaking:
 		if {lockIT.fastLock} is true:
@@ -187,16 +187,16 @@ on place of wall sign:
 				if line 1 of block is "[Private]" or "[private]":
 					cancel event
 					message "%{lockIT.prefix}% &c%{lockIT.msgAlreadyLocked}%"
-				if block behind event-block is a {lockIT.fastLockItems}:
+				if block behind event-block is {lockIT.fastLockItems}:
 					close player's inventory
-					wait {lockIT.fastLockSetTime} seconds
+					wait {@fastLockSetTime} seconds
 					set line 1 of block to "[Private]"
 					set line 2 of block to "%player%            %UUID of player%"
 					message "%{lockIT.prefix}% &e%{lockIT.msgLocked}%"
 					stop
 
-#ITEM PROTECTION WHILE LOCKED					
-on right click on a {lockIT.fastLockItems}:
+#Item protection system#				
+on right click on {@fastLockItems}:
 	loop blocks in radius 2 of clicked block:
 		if line 1 of loop-block is "[Private]" or "[private]":
 			#if line 2 of loop-block is "%player%":
@@ -218,7 +218,7 @@ on right click on a {lockIT.fastLockItems}:
 					stop
 				
 
-#TIMERS	
+#Timers	
 on right click:
 	if clicked block is iron door:
 		loop blocks in radius 3 of clicked block:
@@ -349,7 +349,7 @@ on right click:
 					message "%{lockIT.prefix}% &cSorry, you can't use that."
 					stop
 				
-#BREAKING LOCK-IT SIGNS AND CONTAINERS
+#Protection mechanics#
 on break:
 	if line 1 of event-block is "[Private]" or "[private]":
 		if player has permission "%{lockIT.bypassBreak}%":
@@ -374,7 +374,7 @@ on break:
 #					message "{@prefix} &c{@msgdenied}"
 #					stop				
 				
-#UPDATING SIGNS				
+#Sign updating#			
 on right click on sign:
 	if line 1 of clicked block is "[Private]":
 		if line 2 of clicked block does not contain "%UUID of player%":
