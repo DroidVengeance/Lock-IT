@@ -149,11 +149,11 @@ command /lockit [<integer>] [<text>]:
 					stop
 					
 #DEBUG ONLY BEGIN#
-		if arg 2 is "items":
-			message "%{lockIT.prefix}% {@fastLockItems}"
-			message "%{lockIT.prefix}% %{lockIT.fastLock}%"
-			message "%{lockIT.prefix}% %{lockIT.useLockIT}%"
-			stop
+#		if arg 2 is "items":
+#			message "%{lockIT.prefix}% {@fastLockItems}"
+#			message "%{lockIT.prefix}% %{lockIT.fastLock}%"
+#			message "%{lockIT.prefix}% %{lockIT.useLockIT}%"
+#			stop
 #DEBUG ONLY END#
 
 		if arg 2 is "help":
@@ -357,18 +357,8 @@ on break:
 			message "%{lockIT.prefix}% %{_msgCannotBreak}%"
 	loop blocks in radius 2 of event-block:
 		if line 1 of loop-block is "[Private]" or "[private]":
-		#	if player has permission "{@bypassbreak}":
-		#		stop
-		#	if line 2 of loop-block contains "%UUID of player%":
-		#		stop
-		#	else:
 			cancel event
-			message "%{lockIT.prefix}% %{_msgCannotBreak}%"
-#			if line 2 of loop-block does not contain "%UUID of player%":
-#				if player does not have permission "{@bypassbreak}":
-#					cancel event
-#					message "{@prefix} &c{@msgdenied}"
-#					stop				
+			message "%{lockIT.prefix}% %{_msgCannotBreak}%"	
 				
 #Sign updating#			
 on right click on sign:
@@ -381,6 +371,3 @@ on right click on sign:
 		if line 2 of clicked block contains "%UUID of player%":
 			set {updateSignLoc.%player%} to location of clicked block
 			message "%{lockIT.prefix}% %{_msgUpdateSign}%"
-
-	
-	
