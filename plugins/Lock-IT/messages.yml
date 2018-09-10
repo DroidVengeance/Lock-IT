@@ -29,4 +29,4 @@ msgUpdateSign: '&6Update your sign: &e/lockit <line number> <text>'
 msgCannotUse: '&cSorry, you cannot use that.'
 msgFixed: '&eFixed'
 msgSignUpdated: '&eSign updated successfully!'
-msgSignUpdateError: '&cYou cannot change the owners name!'
+msgSignUpdateError: "&cYou cannot change the owner's name!"

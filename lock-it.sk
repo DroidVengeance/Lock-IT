@@ -246,7 +246,6 @@ on right click:
 						close the clicked block
 						stop
 	if clicked block is any door block:
-	set {_msgCannotUse} to single value "msgCannotUse" get of "plugins/Lock-IT/messages.yml"
 		loop blocks in radius 3 of clicked block:
 			if line 1 of loop-block is "[Private]" or "[private]":
 				if line 2 of loop-block contains "%player%" or "%UUID of player%":
