@@ -11,19 +11,9 @@
 
 #Set your desired messages below
 
-#This will be sent if a player tries to lock an item
-#that is already protected.
 msgAlreadyLocked: "This container is already locked!"
-
-#This will be sent when a player successfully locks
-#a container or item specified in the config.yml.
 msgLocked: "You have locked this container!"
-
-#This will be displayed when a player tries to open
-#a protected container or item if their name is NOT
-#on the sign.
 msgDenied: "This container does't belong to you!"
-
 msgCannotBreak: "&cYou can't break this container!"
 msgUpdateSign: "&6Update your sign: &e/lockit <line number> <text>"
 msgCannotUse: "&cSorry, you can't use that."
