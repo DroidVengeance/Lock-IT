@@ -1,7 +1,7 @@
 # Lock-IT
 Skript replacement for the Lockette plugin
 
-<strong>What is Lock-IT?</strong>
+<strong>What is Lock-IT?</strong><br>
 Lock-IT is a skript coded replacement for the popular Lockette plugin https://www.spigotmc.org/resources/lockette-uuid-supported.3054/. It's completely customizable, without requiring a developer.
 
 <strong>Why Lock-IT?</strong>
