@@ -12,7 +12,7 @@
 
 #Fast Lock - #If TRUE, shift+right clicking a chest while 
 #holding a sign will private the chest automatically.
-fastLock: 'true'
+fastLock: true
 
 #Prefix - Set the desired prefix for all messages here.
 prefix: '&4[&6Lock-IT&4]'

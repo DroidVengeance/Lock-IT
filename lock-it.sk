@@ -151,7 +151,8 @@ command /lockit [<integer>] [<text>]:
 #DEBUG ONLY BEGIN#
 		if arg 2 is "items":
 			message "%{lockIT.prefix}% {@fastLockItems}"
-			message "%{lockIT.prefix}% %{fastLock}%"
+			message "%{lockIT.prefix}% %{lockIT.fastLock}%"
+			message "%{lockIT.prefix}% %{lockIT.useLockIT}%"
 			stop
 #DEBUG ONLY END#
 
@@ -174,9 +175,13 @@ command /lockit [<integer>] [<text>]:
 
 #Fast Lock#
 on place of wall sign:
+	send "test1"
 	if player is sneaking:
+		send "test2"
 		if {lockIT.fastLock} is true:
+			send "test3"
 			if player has permission "%{lockIT.useLockIT}%":
+				send "test4"
 				if line 1 of block is "[Private]" or "[private]":
 					cancel event
 					message "%{lockIT.prefix}% &c%{lockIT.msgAlreadyLocked}%"
