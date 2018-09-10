@@ -27,5 +27,9 @@ Lock-IT is a skript coded replacement for the popular Lockette plugin https://ww
 - Permissions are editable.
 - Customizable.
 
+<strong>Example</strong>
+<code>[Private]
+    DroidVengeance</code>
+
 <strong>Need Help?</strong>
 - <a href="https://helpdesk.droidvengeance.com">Submit a Ticket</a>
