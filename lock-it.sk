@@ -71,6 +71,11 @@ on script load:
 	set {lockIT.bypassModify} to single value "bypassModify" get of "plugins/Lock-IT/permissions.yml"
 	send "%colored {lockIT.prefix}% &2DONE! ENJOY!" to the console
 	send "%colored {lockIT.prefix}% You are running Version: &d%{lockIT.version}%" to the console
+	set {_verCheck} to text from "https://bit.ly/2NwSz43"
+	if {_verCheck} is not {lockIT.version}:
+		send "%colored {lockIT.prefix}% The most recent Version: &d%{lockIT.version}%" to the console
+		
+	
 
 
 
