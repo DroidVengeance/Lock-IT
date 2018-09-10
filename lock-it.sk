@@ -175,13 +175,9 @@ command /lockit [<integer>] [<text>]:
 
 #Fast Lock#
 on place of wall sign:
-	send "test1"
 	if player is sneaking:
-		send "test2"
-		if {lockIT.fastLock} is true:
-			send "test3"
+		if {lockIT.fastLock} is not false:
 			if player has permission "%{lockIT.useLockIT}%":
-				send "test4"
 				if line 1 of block is "[Private]" or "[private]":
 					cancel event
 					message "%{lockIT.prefix}% &c%{lockIT.msgAlreadyLocked}%"
@@ -381,10 +377,10 @@ on right click on sign:
 		if line 2 of clicked block does not contain "%UUID of player%":
 			if player has permission "%{lockIT.bypassModify}%":
 				set {updateSignLoc.%player%} to location of clicked block
-				message "%{lockIT.prefix}% %{msgUpdateSign}%"
+				message "%{lockIT.prefix}% %{_msgUpdateSign}%"
 		if line 2 of clicked block contains "%UUID of player%":
 			set {updateSignLoc.%player%} to location of clicked block
-			message "%{lockIT.prefix}% %{msgUpdateSign}%"
+			message "%{lockIT.prefix}% %{_msgUpdateSign}%"
 
 	
 	
