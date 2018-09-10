@@ -130,8 +130,8 @@ on script load:
 command /lockit [<integer>] [<text>]:
 	permission: {lockIT.useLockIT}
 	trigger:
-	set {_msgSignUpdated} to single value "msgSignUpdated" get of "plugins/Lock-IT/messages.yml"
-	set {_msgSignUpdateError} to single value "msgSignUpdateError" get of "plugins/Lock-IT/messages.yml"
+		set {_msgSignUpdated} to single value "msgSignUpdated" get of "plugins/Lock-IT/messages.yml"
+		set {_msgSignUpdateError} to single value "msgSignUpdateError" get of "plugins/Lock-IT/messages.yml"
 		if arg 1 is set:
 			if arg 2 is not set:
 				set line arg 1 of block at {updateSignLoc.%player%} to " "
