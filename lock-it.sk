@@ -171,8 +171,6 @@ command /lockit [<integer>] [<text>]:
 		if arg 1 is not set:
 			message "%{lockIT.prefix}% &eUse /lockit help"
 			stop
-				
-			
 
 
 #Fast Lock#
