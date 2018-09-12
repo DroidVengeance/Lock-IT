@@ -17,9 +17,9 @@ aliases:
 	any fence gate = 107, 183, 184, 185, 186, 187
 
 #DO NOT CHANGE THESE!!
-options:
-	fastLockItems: any door block or any trapdoors or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
-	fastLockSetTime: 1
+#options:
+#	fastLockItems: any door block or any trapdoors or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
+#	fastLockSetTime: 1
 	
 
 #Generate all the files and load variables#
@@ -181,16 +181,16 @@ on place of wall sign:
 				if line 1 of block is "[Private]" or "[private]":
 					cancel event
 					message "%{lockIT.prefix}% &c%{lockIT.msgAlreadyLocked}%"
-				if block behind event-block is a {@fastLockItems}:
+				if block behind event-block is a any door block or any trapdoors or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox:
 					close player's inventory
-					wait {@fastLockSetTime} seconds
+					wait 1 seconds
 					set line 1 of block to "[Private]"
 					set line 2 of block to "%player%            %UUID of player%"
 					message "%{lockIT.prefix}% &e%{lockIT.msgLocked}%"
 					stop
 
 #Item protection system#				
-on right click on a {@fastLockItems}:
+on right click on a any door block or any trapdoors or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox:
 	loop blocks in radius 2 of clicked block:
 		if line 1 of loop-block is "[Private]" or "[private]":
 			#if line 2 of loop-block is "%player%":
