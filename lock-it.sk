@@ -15,11 +15,6 @@
 aliases:
 	any door block = 64, 193, 194, 195, 196, 197, 71, 427, 96, 167
 	any fence gate = 107, 183, 184, 185, 186, 187
-
-#DO NOT CHANGE THESE!!
-#options:
-#	fastLockItems: any door block or any trapdoors or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox
-#	fastLockSetTime: 1
 	
 
 #Generate all the files and load variables#
