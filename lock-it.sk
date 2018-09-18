@@ -351,6 +351,10 @@ on break:
 			cancel event
 			message "%{lockIT.prefix}% %{_msgCannotBreak}%"
 			stop
+	if line 1 of block in front of event-block is "[Lock-IT]" or "[lock-it]":
+		cancel event
+		message "%{lockIT.prefix}% %{_msgCannotBreak}%"
+		stop
 	loop blocks in radius 2 of event-block:
 		if line 1 of loop-block is "[Lock-IT]" or "[lock-it]":
 			cancel event
