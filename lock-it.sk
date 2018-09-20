@@ -42,37 +42,24 @@ on script load:
 		send "[Lock-IT] &2DONE!!" to the console
 		send "" to the console
 	send "[Lock-IT] &fGrabbing settings from the config..." to the console
-	delete {lockIT.prefix}
-	set {lockIT.prefix} to skutil yaml value "prefix" from file "plugins/Lock-IT/config.yml"
-	delete {lockIT.fastLock}
-	set {lockIT.fastLock} to skutil yaml value "fastLock" from file "plugins/Lock-IT/config.yml"
-#	if {lockIT.fastLockSetTime} is not set: ***Future Feature***
-#		set {lockIT.fastLockSetTime} to skutil yaml value "fastLockSetTime" from file "plugins/Lock-IT/config.yml" ***Future Feature***
-#	if {lockIT.fastLockItems} is not set: ***Future Feature***
-#		set {lockIT.fastLockItems} to skutil yaml value "fastLockItems" from file "plugins/Lock-IT/config.yml" ***Future Feature***
-	delete {lockIT.version}
-	set {lockIT.version} to skutil yaml value "version" from file "plugins/Lock-IT/config.yml"
+	delete {lockIT::*}
+	set {lockIT::prefix} to skutil yaml value "prefix" from file "plugins/Lock-IT/config.yml"
+	set {lockIT::fastLock} to skutil yaml value "fastLock" from file "plugins/Lock-IT/config.yml"
+	set {lockIT::version} to skutil yaml value "version" from file "plugins/Lock-IT/config.yml"
 	send "[Lock-IT] &fGrabbing all messages..." to the console
-	delete {lockIT.msgAlreadyLocked}
-	set {lockIT.msgAlreadyLocked} to skutil yaml value "msgAlreadyLocked" from file "plugins/Lock-IT/messages.yml"
-	delete {lockIT.msgLocked}
-	set {lockIT.msgLocked} to skutil yaml value "msgLocked" from file "plugins/Lock-IT/messages.yml"
-	delete {lockIT.msgDenied}
-	set {lockIT.msgDenied} to skutil yaml value "msgDenied" from file "plugins/Lock-IT/messages.yml"
-	delete {lockIT.useLockIT}
-	set {lockIT.useLockIT} to skutil yaml value "useLockIT" from file "plugins/Lock-IT/permissions.yml"
+	set {lockIT::msgAlreadyLocked} to skutil yaml value "msgAlreadyLocked" from file "plugins/Lock-IT/messages.yml"
+	set {lockIT::msgLocked} to skutil yaml value "msgLocked" from file "plugins/Lock-IT/messages.yml"
+	set {lockIT::msgDenied} to skutil yaml value "msgDenied" from file "plugins/Lock-IT/messages.yml"
+	set {lockIT::useLockIT} to skutil yaml value "useLockIT" from file "plugins/Lock-IT/permissions.yml"
 	send "[Lock-IT] &fGrabbing all permissions..." to the console
-	delete {lockIT.bypassLocked}
-	set {lockIT.bypassLocked} to skutil yaml value "bypassLocked" from file "plugins/Lock-IT/permissions.yml"
-	delete {lockIT.bypassBreak}
-	set {lockIT.bypassBreak} to skutil yaml value "bypassBreak" from file "plugins/Lock-IT/permissions.yml"
-	delete {lockIT.bypassModify}
-	set {lockIT.bypassModify} to skutil yaml value "bypassModify" from file "plugins/Lock-IT/permissions.yml"
+	set {lockIT::bypassLocked} to skutil yaml value "bypassLocked" from file "plugins/Lock-IT/permissions.yml"
+	set {lockIT::bypassBreak} to skutil yaml value "bypassBreak" from file "plugins/Lock-IT/permissions.yml"
+	set {lockIT::bypassModify} to skutil yaml value "bypassModify" from file "plugins/Lock-IT/permissions.yml"
 	send "[Lock-IT] &2DONE! ENJOY!" to the console
-	send "[Lock-IT] You are running Version: &d%{lockIT.version}%" to the console
+	send "[Lock-IT] You are running Version: &d%{lockIT::version}%" to the console
 	set {_verCheck} to text from "https://bit.ly/2NwSz43"
-	if {_verCheck} is not {lockIT.version}:
-		send "[Lock-IT] The most recent Version: &d%{lockIT.version}%" to the console
+	if {_verCheck} is not {lockIT::version}:
+		send "[Lock-IT] The most recent Version: &d%{lockIT::version}%" to the console
 		
 	
 
@@ -127,7 +114,7 @@ on script load:
 	
 #Commands#
 command /lockit [<integer>] [<text>]:
-	permission: {lockIT.useLockIT}
+	permission: {lockIT::useLockIT}
 	trigger:
 		set {_msgSignUpdated} to skutil yaml value "msgSignUpdated" from file "plugins/Lock-IT/messages.yml"
 		set {_msgSignUpdateError} to skutil yaml value "msgSignUpdateError" from file "plugins/Lock-IT/messages.yml"
@@ -136,26 +123,26 @@ command /lockit [<integer>] [<text>]:
 			if arg 2 is not set:
 				set line arg 1 of block at {updateSignLoc.%player%} to " "
 				delete {updateSignLoc.%player%}
-				message "%{lockIT.prefix}% %{_msgSignUpdated}%"
+				message "%{lockIT::prefix}% %{_msgSignUpdated}%"
 				stop
 			if arg 1 is 2:
-				message "%{lockIT.prefix}% %{_msgSignUpdateError}%"
+				message "%{lockIT::prefix}% %{_msgSignUpdateError}%"
 				stop
 			else:
 				set line arg 1 of block at {updateSignLoc.%player%} to arg 2
 				delete {updateSignLoc.%player%}
-				message "%{lockIT.prefix}% %{_msgSignUpdated}%"
+				message "%{lockIT::prefix}% %{_msgSignUpdated}%"
 				stop
 		if arg 2 is "fix":
 			if line 1 of target block is "[Lock-IT]" or "[lock-it]":
 				if line 2 of target block contains "%player%" or UUID of player:		
 					toggle block behind target block
-					message "%{lockIT.prefix}% %{_msgFixed}%"
+					message "%{lockIT::prefix}% %{_msgFixed}%"
 					stop
 
 		if arg 2 is "help":
 			message "&4&m---------------------------------------------------"
-			message "%{lockIT.prefix}% &eby DroidVengeance"
+			message "%{lockIT::prefix}% &eby DroidVengeance"
 			message "&4&m---------------------------------------------------"
 			message "  - &eShift+Rightclicking while holding a sign, will automatically lock those items."
 			message "  - &eTo edit a sign, rightclick and use:"
@@ -164,24 +151,24 @@ command /lockit [<integer>] [<text>]:
 			message "    - &e/lockit fix"
 			stop
 		if arg 1 is not set:
-			message "%{lockIT.prefix}% &eUse /lockit help"
+			message "%{lockIT::prefix}% &eUse /lockit help"
 			stop
 
 
 #Fast Lock#
 on place of wall sign:
 	if player is sneaking:
-		if {lockIT.fastLock} is not false:
-			if player has permission "%{lockIT.useLockIT}%":
+		if {lockIT::fastLock} is not false:
+			if player has permission "%{lockIT::useLockIT}%":
 				if line 1 of block is "[Lock-IT]" or "[lock-it]":
 					cancel event
-					message "%{lockIT.prefix}% &c%{lockIT.msgAlreadyLocked}%"
+					message "%{lockIT::prefix}% &c%{lockIT::msgAlreadyLocked}%"
 				if block behind event-block is a any door block or any trapdoors or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox:
 					close player's inventory
 					wait 1 seconds
 					set line 1 of block to "[Lock-IT]"
 					set line 2 of block to "%player%            %UUID of player%"
-					message "%{lockIT.prefix}% &e%{lockIT.msgLocked}%"
+					message "%{lockIT::prefix}% &e%{lockIT::msgLocked}%"
 					stop
 
 #Item protection system#				
@@ -192,7 +179,7 @@ on right click on a any door block or any trapdoors or chest or trapped chest or
 				wait 1 tick
 				stop
 			if line 2 of loop-block does not contain "%player%" or UUID of player:
-				if player has permission "%{lockIT.bypassLocked}%":
+				if player has permission "%{lockIT::bypassLocked}%":
 					wait 1 tick
 				if line 3 of loop-block contains "%player%" or UUID of player or "[Everyone]" or "[everyone]":
 					wait 1 tick
@@ -200,7 +187,7 @@ on right click on a any door block or any trapdoors or chest or trapped chest or
 					wait 1 tick
 				else:
 					cancel event
-					message "%{lockIT.prefix}% &c%{lockIT.msgDenied}%"
+					message "%{lockIT::prefix}% &c%{lockIT::msgDenied}%"
 					stop
 				
 
@@ -258,7 +245,7 @@ on right click:
 						toggle the clicked block
 					stop
 				if line 2 of loop-block does not contain UUID of player:
-					if player does not have permission "%{lockIT.bypassLocked}%":
+					if player does not have permission "%{lockIT::bypassLocked}%":
 						if line 3 of loop-block contains "%player%" or UUID of player or "[Everyone]" or "[everyone]":
 							if line 4 of loop-block is "[timer:1]":
 								wait 1 seconds
@@ -307,7 +294,7 @@ on right click:
 						toggle the clicked block
 					stop
 				if line 2 of loop-block does not contain UUID of player:
-					if player does not have permission "%{lockIT.bypassLocked}%":
+					if player does not have permission "%{lockIT::bypassLocked}%":
 						if line 3 of loop-block contains "%player%" or UUID of player or "[Everyone]" or "[everyone]":
 							if line 4 of loop-block is "[timer:1]":
 								wait 1 seconds
@@ -333,29 +320,29 @@ on right click:
 						stop
 				if line 2 of loop-block does not contain "%player%" or UUID of player:
 					cancel event
-					message "%{lockIT.prefix}% %{msgCannotUse}%"
+					message "%{lockIT::prefix}% %{msgCannotUse}%"
 					stop
 				
 #Protection mechanics#
 on break:
 	set {_msgCannotBreak} to skutil yaml value "msgCannotBreak" from file "plugins/Lock-IT/messages.yml"
 	if line 1 of event-block is "[Lock-IT]" or "[lock-it]":
-		if player has permission "%{lockIT.bypassBreak}%":
+		if player has permission "%{lockIT::bypassBreak}%":
 			stop
 		if line 2 of event-block contains UUID of player:
 			stop
 		else:
 			cancel event
-			message "%{lockIT.prefix}% %{_msgCannotBreak}%"
+			message "%{lockIT::prefix}% %{_msgCannotBreak}%"
 			stop
 	if line 1 of block in front of event-block is "[Lock-IT]" or "[lock-it]":
 		cancel event
-		message "%{lockIT.prefix}% %{_msgCannotBreak}%"
+		message "%{lockIT::prefix}% %{_msgCannotBreak}%"
 		stop
 	loop blocks in radius 2 of event-block:
 		if line 1 of loop-block is "[Lock-IT]" or "[lock-it]":
 			cancel event
-			message "%{lockIT.prefix}% %{_msgCannotBreak}%"
+			message "%{lockIT::prefix}% %{_msgCannotBreak}%"
 			stop
 				
 #Sign updating#			
@@ -363,10 +350,10 @@ on right click on wall sign:
 	set {_msgUpdateSign} to skutil yaml value "msgUpdateSign" from file "plugins/Lock-IT/messages.yml"
 	if line 1 of clicked block is "[Lock-IT]":
 		if line 2 of clicked block does not contain UUID of player:
-			if player has permission "%{lockIT.bypassModify}%":
+			if player has permission "%{lockIT::bypassModify}%":
 				set {updateSignLoc.%player%} to location of clicked block
-				message "%{lockIT.prefix}% %{_msgUpdateSign}%"
+				message "%{lockIT::prefix}% %{_msgUpdateSign}%"
 				stop
 		if line 2 of clicked block contains UUID of player:
 			set {updateSignLoc.%player%} to location of clicked block
-			message "%{lockIT.prefix}% %{_msgUpdateSign}%"
+			message "%{lockIT::prefix}% %{_msgUpdateSign}%"
