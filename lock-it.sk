@@ -43,31 +43,31 @@ on script load:
 		send "" to the console
 	send "[Lock-IT] &fGrabbing settings from the config..." to the console
 	if {lockIT.prefix} is not set:
-		set {lockIT.prefix} to single value "prefix" get of "plugins/Lock-IT/config.yml"
+		set {lockIT.prefix} to skutil yaml value "prefix" from file "plugins/Lock-IT/config.yml"
 	if {lockIT.fastLock} is not set:
-		set {lockIT.fastLock} to single value "fastLock" get of "plugins/Lock-IT/config.yml"
-	if {lockIT.fastLockSetTime} is not set:
-		set {lockIT.fastLockSetTime} to single value "fastLockSetTime" get of "plugins/Lock-IT/config.yml"
-	if {lockIT.fastLockItems} is not set:
-		set {lockIT.fastLockItems} to single value "fastLockItems" get of "plugins/Lock-IT/config.yml"
+		set {lockIT.fastLock} to skutil yaml value "fastLock" from file "plugins/Lock-IT/config.yml"
+#	if {lockIT.fastLockSetTime} is not set: ***Future Feature***
+#		set {lockIT.fastLockSetTime} to skutil yaml value "fastLockSetTime" from file "plugins/Lock-IT/config.yml" ***Future Feature***
+#	if {lockIT.fastLockItems} is not set: ***Future Feature***
+#		set {lockIT.fastLockItems} to skutil yaml value "fastLockItems" from file "plugins/Lock-IT/config.yml" ***Future Feature***
 	if {lockIT.version} is not set:
-		set {lockIT.version} to single value "version" get of "plugins/Lock-IT/config.yml"
+		set {lockIT.version} to skutil yaml value "version" from file "plugins/Lock-IT/config.yml"
 	send "[Lock-IT] &fGrabbing all messages..." to the console
 	if {lockIT.msgAlreadyLocked} is not set:
-		set {lockIT.msgAlreadyLocked} to single value "msgAlreadyLocked" get of "plugins/Lock-IT/messages.yml"
+		set {lockIT.msgAlreadyLocked} to skutil yaml value "msgAlreadyLocked" from file "plugins/Lock-IT/messages.yml"
 	if {lockIT.msgLocked} is not set:
-		set {lockIT.msgLocked} to single value "msgLocked" get of "plugins/Lock-IT/messages.yml"
+		set {lockIT.msgLocked} to skutil yaml value "msgLocked" from file "plugins/Lock-IT/messages.yml"
 	if {lockIT.msgDenied} is not set:
-		set {lockIT.msgDenied} to single value "msgDenied" get of "plugins/Lock-IT/messages.yml"
+		set {lockIT.msgDenied} to skutil yaml value "msgDenied" from file "plugins/Lock-IT/messages.yml"
 	if {lockIT.useLockIT} is not set:
-		set {lockIT.useLockIT} to single value "useLockIT" get of "plugins/Lock-IT/permissions.yml"
+		set {lockIT.useLockIT} to skutil yaml value "useLockIT" from file "plugins/Lock-IT/permissions.yml"
 	send "[Lock-IT] &fGrabbing all permissions..." to the console
 	if {lockIT.bypassLocked} is not set:
-		set {lockIT.bypassLocked} to single value "bypassLocked" get of "plugins/Lock-IT/permissions.yml"
+		set {lockIT.bypassLocked} to skutil yaml value "bypassLocked" from file "plugins/Lock-IT/permissions.yml"
 	if {lockIT.bypassBreak} is not set:
-		set {lockIT.bypassBreak} to single value "bypassBreak" get of "plugins/Lock-IT/permissions.yml"
+		set {lockIT.bypassBreak} to skutil yaml value "bypassBreak" from file "plugins/Lock-IT/permissions.yml"
 	if {lockIT.bypassModify} is not set:
-		set {lockIT.bypassModify} to single value "bypassModify" get of "plugins/Lock-IT/permissions.yml"
+		set {lockIT.bypassModify} to skutil yaml value "bypassModify" from file "plugins/Lock-IT/permissions.yml"
 	send "[Lock-IT] &2DONE! ENJOY!" to the console
 	send "[Lock-IT] You are running Version: &d%{lockIT.version}%" to the console
 	set {_verCheck} to text from "https://bit.ly/2NwSz43"
@@ -129,9 +129,9 @@ on script load:
 command /lockit [<integer>] [<text>]:
 	permission: {lockIT.useLockIT}
 	trigger:
-		set {_msgSignUpdated} to single value "msgSignUpdated" get of "plugins/Lock-IT/messages.yml"
-		set {_msgSignUpdateError} to single value "msgSignUpdateError" get of "plugins/Lock-IT/messages.yml"
-		set {_msgFixed} to single value "msgFixed" get of "plugins/Lock-IT/messages.yml"
+		set {_msgSignUpdated} to skutil yaml value "msgSignUpdated" from file "plugins/Lock-IT/messages.yml"
+		set {_msgSignUpdateError} to skutil yaml value "msgSignUpdateError" from file "plugins/Lock-IT/messages.yml"
+		set {_msgFixed} to skutil yaml value "msgFixed" from file "plugins/Lock-IT/messages.yml"
 		if arg 1 is set:
 			if arg 2 is not set:
 				set line arg 1 of block at {updateSignLoc.%player%} to " "
@@ -188,7 +188,6 @@ on place of wall sign:
 on right click on a any door block or any trapdoors or chest or trapped chest or furnace or ender chest or enchantment table or crafting table or dropper or dispenser or hoppers or anvil or jukebox:
 	loop blocks in radius 2 of clicked block:
 		if line 1 of loop-block is "[Lock-IT]" or "[lock-it]":
-			#if line 2 of loop-block is "%player%":
 			if line 2 of loop-block contains "%player%" or UUID of player:
 				wait 1 tick
 				stop
@@ -209,7 +208,7 @@ on right click on a any door block or any trapdoors or chest or trapped chest or
 
 #Timers	
 on right click:
-	set {_msgCannotUse} to single value "msgCannotUse" get of "plugins/Lock-IT/messages.yml"
+	set {_msgCannotUse} to skutil yaml value "msgCannotUse" from file "plugins/Lock-IT/messages.yml"
 	if clicked block is iron door:
 		loop blocks in radius 3 of clicked block:
 			if line 1 of loop-block is "[Lock-IT]" or "[lock-it]":
@@ -341,7 +340,7 @@ on right click:
 				
 #Protection mechanics#
 on break:
-	set {_msgCannotBreak} to single value "msgCannotBreak" get of "plugins/Lock-IT/messages.yml"
+	set {_msgCannotBreak} to skutil yaml value "msgCannotBreak" from file "plugins/Lock-IT/messages.yml"
 	if line 1 of event-block is "[Lock-IT]" or "[lock-it]":
 		if player has permission "%{lockIT.bypassBreak}%":
 			stop
@@ -363,7 +362,7 @@ on break:
 				
 #Sign updating#			
 on right click on wall sign:
-	set {_msgUpdateSign} to single value "msgUpdateSign" get of "plugins/Lock-IT/messages.yml"
+	set {_msgUpdateSign} to skutil yaml value "msgUpdateSign" from file "plugins/Lock-IT/messages.yml"
 	if line 1 of clicked block is "[Lock-IT]":
 		if line 2 of clicked block does not contain UUID of player:
 			if player has permission "%{lockIT.bypassModify}%":
