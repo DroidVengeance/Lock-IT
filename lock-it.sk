@@ -193,13 +193,11 @@ on right click on a any door block or any trapdoors or chest or trapped chest or
 				stop
 			if line 2 of loop-block does not contain "%player%" or UUID of player:
 				if player has permission "%{lockIT.bypassLocked}%":
-					stop
+					wait 1 tick
 				if line 3 of loop-block contains "%player%" or UUID of player or "[Everyone]" or "[everyone]":
 					wait 1 tick
-					stop
 				if line 4 of loop-block contains "%player%" or UUID of player or "[Everyone]" or "[everyone]":
 					wait 1 tick
-					stop
 				else:
 					cancel event
 					message "%{lockIT.prefix}% &c%{lockIT.msgDenied}%"
@@ -212,7 +210,7 @@ on right click:
 	if clicked block is iron door:
 		loop blocks in radius 3 of clicked block:
 			if line 1 of loop-block is "[Lock-IT]" or "[lock-it]":
-				if line 2 of loop-block contains UUID of player:
+				if line 2 of loop-block contains "%player%" or UUID of player:
 					open the clicked block
 					wait 2 ticks
 					if line 4 of loop-block is "[timer:1]":
