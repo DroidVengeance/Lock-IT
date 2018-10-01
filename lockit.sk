@@ -19,14 +19,6 @@ aliases:
 
 #Generate all the files and load variables#
 on script load:
-	send "-----------------------------------------------------" to the console
-	send ".____                  __             .______________" to the console
-	send "|    |    ____   ____ |  | __         |   \__    ___/" to the console
-	send "|    |   /  _ \_/ ___\|  |/ /  ______ |   | |    |   " to the console
-	send "|    |__(  <_> )  \___|    <  /_____/ |   | |    |   " to the console
-	send "|_______ \____/ \___  >__|_ \         |___| |____|   " to the console
-	send "        \/          \/     \/                        " to the console
-	send "-----------------------------------------------------" to the console
 	if folder "plugins/Lock-IT" doesn't exists:
 		create folder "plugins/Lock-IT"
 		send "[Lock-IT] &fCreating folder..." to the console
