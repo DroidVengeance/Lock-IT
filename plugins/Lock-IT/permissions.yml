@@ -1,24 +1,18 @@
-#.____                  __             .______________
-#|    |    ____   ____ |  | __         |   \__    ___/
-#|    |   /  _ \_/ ___\|  |/ /  ______ |   | |    |   
-#|    |__(  <_> )  \___|    <  /_____/ |   | |    |   
-#|_______ \____/ \___  >__|_ \         |___| |____|   
+#.____                  __     .______________
+#|    |    ____   ____ |  | __ |   \__    ___/
+#|    |   /  _ \_/ ___\|  |/ / |   | |    |   
+#|    |__(  <_> )  \___|    <  |   | |    |   
+#|_______ \____/ \___  >__|_ \ |___| |____|   
 #        \/          \/     \/                       
 
-#Lock-IT by DroidVengeance
-#A Skript alternative to the popular Lockette plugin
-#https://www.spigotmc.org/resources/lockette-uuid-supported.3054/
+# LockIT by DroidVengeance
+# A Skript alternative to the popular Lockette plugin
+# https://www.spigotmc.org/resources/lockette-uuid-supported.3054/
 
-#Set your desired permissions below
+# Set your desired permissions below
 
-#Required for players to use and protect chests or items.
-useLockIT: lockit.use.player
+# Required for players to use and protect chests or items.
+useLockIT: lockit.player.use
 
-#Allows Staff to bypass locked chests
-bypassLocked: lockit.bypass.locked
-
-#Allows Staff to break protected containers
-bypassBreak: lockit.bypass.break
-
-#Allows Staff to modify protected container signs
-bypassModify: lockit.bypass.modify
+# Allows Staff to bypass locked chests and break or edit LockIT signs.
+bypassLocked: lockit.admin.bypass
