@@ -43,6 +43,7 @@ on script load:
 	send "[LockIT] &fGrabbing all permissions..." to the console
 	set {lockIT::useLockIT} to skutil yaml value "useLockIT" from file "plugins/LockIT/permissions.yml"
 	set {lockIT::bypassLocked} to skutil yaml value "bypassLocked" from file "plugins/LockIT/permissions.yml"
+	set {lockIT::adminlockIT} to skutil yaml value "adminLockIT" from file "plugins/LockIT/permissions.yml"
 	send "[LockIT] &2DONE! ENJOY!" to the console
 	send "[LockIT] You are running Version: &d%{lockIT::version}%" to the console
 	set {_verCheck} to text from "https://bit.ly/2NwSz43"
@@ -85,7 +86,7 @@ command /lockit [<integer>] [<text>]:
 
 
 # ---------------------------------------------------------------------------------------------------------------
-# Fastlock
+# Fastlock & Protection
 # ---------------------------------------------------------------------------------------------------------------
 on BlockPlaceEvent:
 	if event.getBlockPlaced() = wall sign:
@@ -212,7 +213,7 @@ on PlayerInteractEvent:
 			"%event.getAction()%" contains "RIGHT_CLICK"
 			if line 2 of event.getClickedBlock() != "%event.getPlayer()%":
 				cancel event
-				if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
+				if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "%{lockIT::adminlockIT}%" or "lockit.admin.*":
 					uncancel event
 					event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgUpdateSign}%")
 					set {lockit::%event.getPlayer()%::signEdit} to event.getClickedBlock()

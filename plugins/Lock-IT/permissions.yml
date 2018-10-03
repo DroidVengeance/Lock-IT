@@ -14,5 +14,8 @@
 # Required for players to use and protect chests or items.
 useLockIT: lockit.player.use
 
+# Allows Staff to break or edit LockIT signs.
+adminLockIT: lockit.admin
+
 # Allows Staff to bypass locked chests and break or edit LockIT signs.
 bypassLocked: lockit.admin.bypass
