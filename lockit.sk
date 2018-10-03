@@ -43,6 +43,7 @@ on script load:
 	send "[LockIT] &fGrabbing all permissions..." to the console
 	set {lockIT::useLockIT} to skutil yaml value "useLockIT" from file "plugins/LockIT/permissions.yml"
 	set {lockIT::bypassLocked} to skutil yaml value "bypassLocked" from file "plugins/LockIT/permissions.yml"
+	set {lockIT::adminLockIT} to skutil yaml value "adminLockIT" from file "plugins/LockIT/permissions.yml"
 	send "[LockIT] &2DONE! ENJOY!" to the console
 	send "[LockIT] You are running Version: &d%{lockIT::version}%" to the console
 	set {_verCheck} to text from "https://bit.ly/2NwSz43"
@@ -68,20 +69,22 @@ command /lockit [<integer>] [<text>]:
 				message "  - &eTo fix a door use:"
 				message "    - &e/lockit fix"
 			if arg 2 is "fix":
-				toggle target block
-				send "%colored {lockIT::prefix}% %colored {lockIT::msgFixed}%"
-			if arg 2 is "true" or "TRUE":
-				if player has permission "lockit.admin":
-					set {lockit::fastlock::setting} to true
-					send "%colored {lockIT::prefix}% &6Fastlock is &aenabled&6!"
-			else if arg 2 is "false" or "FALSE":
-				if player has permission "lockit.admin":
-					set {lockit::fastlock::setting} to false
-					send "%colored {lockIT::prefix}% &6Fastlock is &cdisabled&6!"
+				loop blocks in radius 2 of target block:
+					loop-block = wall sign
+					line 1 of loop-block is "[LockIT]"
+					line 2 of loop-block = "%player%"	
+					toggle target block
+					send "%colored {lockIT::prefix}% %colored {lockIT::msgFixed}%"
 		if arg 1 is set:
+			if arg 2 is not set:
+				set line arg 1 of {lockit::%player%::signEdit} to " "
+				send "%colored {lockIT::prefix}% %colored {lockIT::msgSignUpdated}%"
+				delete {lockit::%player%::signEdit}
+				stop
 			set line arg 1 of {lockit::%player%::signEdit} to arg 2
-			send "%colored {lockIT::prefix}% %colored {msgSignUpdated}%"
+			send "%colored {lockIT::prefix}% %colored {lockIT::msgSignUpdated}%"
 			delete {lockit::%player%::signEdit}
+
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -89,7 +92,7 @@ command /lockit [<integer>] [<text>]:
 # ---------------------------------------------------------------------------------------------------------------
 on BlockPlaceEvent:
 	if event.getBlockPlaced() = wall sign:
-		{lockit::fastlock::setting} = true
+		{lockIT::fastLock} = true
 		loop blocks in radius 1 of event.getBlockPlaced():
 			if loop-block = chest or any door or any trapdoor or any crafting table or any furnace:
 				if event.getPlayer() has permission "%{lockIT::useLockIT}%" or "%{lockIT::bypassLocked}%":
@@ -108,6 +111,7 @@ on sign edit:
 			set block to air
 			send "%colored {lockIT::prefix}% &cYou don't have permission to do that!"
 
+
 # --------------------------------------------------------------------------------------------------------
 # Interacting with protected blocks
 # ---------------------------------------------------------------------------------------------------------------
@@ -119,6 +123,9 @@ on PlayerInteractEvent:
 					if line 2 of loop-block != "%event.getPlayer()%":
 						cancel event
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
+							uncancel event
+							stop
+						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
 							uncancel event
 							stop
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgChestDenied}%")
@@ -149,6 +156,9 @@ on PlayerInteractEvent:
 								wait 5 second
 								close event.getClickedBlock()
 							stop
+						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+							uncancel event
+							stop
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgDoorDenied}%")
 						stop
 					else:
@@ -177,6 +187,9 @@ on PlayerInteractEvent:
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 							uncancel event
 							stop
+						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+							uncancel event
+							stop
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgTrapdoorDenied}%")
 						stop
 					else:
@@ -188,6 +201,9 @@ on PlayerInteractEvent:
 					if line 2 of loop-block != "%event.getPlayer()%":
 						cancel event
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
+							uncancel event
+							stop
+						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
 							uncancel event
 							stop
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgTableDenied}%")
@@ -203,6 +219,9 @@ on PlayerInteractEvent:
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 							uncancel event
 							stop
+						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+							uncancel event
+							stop
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgfurnaceDenied}%")
 						stop
 					else:
@@ -212,7 +231,7 @@ on PlayerInteractEvent:
 			"%event.getAction()%" contains "RIGHT_CLICK"
 			if line 2 of event.getClickedBlock() != "%event.getPlayer()%":
 				cancel event
-				if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
+				if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "%{lockIT::adminLockIT}%" or "lockit.admin.*":
 					uncancel event
 					event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgUpdateSign}%")
 					set {lockit::%event.getPlayer()%::signEdit} to event.getClickedBlock()

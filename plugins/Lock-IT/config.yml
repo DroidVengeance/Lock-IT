@@ -15,7 +15,7 @@
 fastLock: true
 
 #Prefix - Set the desired prefix for all messages here.
-prefix: '&4[&6Lock-IT&4]'
+prefix: '&4[&6LockIT&4]'
 
 #Version - Do not change this!
 version: 2.2.0
