@@ -30,8 +30,16 @@ on script load:
 	send "[LockIT] &fGrabbing all messages..." to the console
 	set {lockIT::msgAlreadyLocked} to skutil yaml value "msgAlreadyLocked" from file "plugins/LockIT/messages.yml"
 	set {lockIT::msgLocked} to skutil yaml value "msgLocked" from file "plugins/LockIT/messages.yml"
-	set {lockIT::msgDenied} to skutil yaml value "msgDenied" from file "plugins/LockIT/messages.yml"
-	set {lockIT::useLockIT} to skutil yaml value "useLockIT" from file "plugins/LockIT/permissions.yml"
+	set {lockIT::msgChestDenied} to skutil yaml value "msgChestDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgDoorDenied} to skutil yaml value "msgDoorDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgTableDenied} to skutil yaml value "msgTableDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgFurnaceDenied} to skutil yaml value "msgFurnaceDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgTrapdoorDenied} to skutil yaml value "msgTrapdoorDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgUpdateSign} to skutil yaml value "msgUpdateSign" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgNoUpdateSign} to skutil yaml value "msgNoUpdateSign" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgSignDenied} to skutil yaml value "msgSignDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgFixed} to skutil yaml value "msgFixed" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgSignUpdated} to skutil yaml value "msgSignUpdated" from file "plugins/LockIT/messages.yml"
 	send "[LockIT] &fGrabbing all permissions..." to the console
 	set {lockIT::useLockIT} to skutil yaml value "useLockIT" from file "plugins/LockIT/permissions.yml"
 	set {lockIT::bypassLocked} to skutil yaml value "bypassLocked" from file "plugins/LockIT/permissions.yml"
@@ -61,7 +69,7 @@ command /lockit [<integer>] [<text>] [<text>]:
 				message "    - &e/lockit fix"
 			if arg 2 is "fix":
 				toggle target block
-				send "%{lockIT::prefix}% &6Door has been fixed!"
+				send "%{lockIT::prefix}% %{lockIT::msgFixed}%"
 			if arg 2 is "true" or "TRUE":
 				if player has permission "lockit.admin":
 					set {lockit::fastlock::setting} to true
@@ -72,7 +80,7 @@ command /lockit [<integer>] [<text>] [<text>]:
 					send "%{lockIT::prefix}% &6Fastlock is &cdisabled&6!"
 		if arg 1 is set:
 			set line arg 1 of {lockit::%player%::signEdit} to arg 2
-			send "%{lockIT::prefix}% &6Sign Updated!"
+			send "%{lockIT::prefix}% %{msgSignUpdated}%"
 			delete {lockit::%player%::signEdit}
 
 
@@ -105,7 +113,7 @@ on PlayerInteractEvent:
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 							uncancel event
 							stop
-						event.getPlayer().sendMessage("%{lockIT::prefix}% &cThat chest doesn't belong to you!")
+						event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgChestDenied}%")
 						stop
 					else:
 						uncancel event
@@ -133,7 +141,7 @@ on PlayerInteractEvent:
 								wait 5 second
 								close event.getClickedBlock()
 							stop
-						event.getPlayer().sendMessage("%{lockIT::prefix}% &cThat door doesn't belong to you!")
+						event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgDoorDenied}%")
 						stop
 					else:
 						uncancel event
@@ -161,7 +169,7 @@ on PlayerInteractEvent:
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 							uncancel event
 							stop
-						event.getPlayer().sendMessage("%{lockIT::prefix}% &cThat door doesn't belong to you!")
+						event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgTrapdoorDenied}%")
 						stop
 					else:
 						uncancel event
@@ -174,7 +182,7 @@ on PlayerInteractEvent:
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 							uncancel event
 							stop
-						event.getPlayer().sendMessage("%{lockIT::prefix}% &cThat table doesn't belong to you!")
+						event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgTableDenied}%")
 						stop
 					else:
 						uncancel event
@@ -187,7 +195,7 @@ on PlayerInteractEvent:
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 							uncancel event
 							stop
-						event.getPlayer().sendMessage("%{lockIT::prefix}% &cThat furnace doesn't belong to you!")
+						event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgfurnaceDenied}%")
 						stop
 					else:
 						uncancel event
@@ -198,14 +206,14 @@ on PlayerInteractEvent:
 				cancel event
 				if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 					uncancel event
-					event.getPlayer().sendMessage("%{lockIT::prefix}% &6Use &f/lockit <linenum> <text> &6to update this sign!")
+					event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgUpdateSign}%")
 					set {lockit::%event.getPlayer()%::signEdit} to event.getClickedBlock()
 					stop
-				event.getPlayer().sendMessage("&4[&6Lock&4IT&4] &cYou can't change that sign!")
+				event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgNoUpdateSign}%")
 				stop
 			else:
 				uncancel event
-				event.getPlayer().sendMessage("%{lockIT::prefix}% &6Use &f/lockit <linenum> <text> &6to update this sign!")
+				event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgUpdateSign}%")
 				set {lockit::%event.getPlayer()%::signEdit} to event.getClickedBlock()
 
 
@@ -219,7 +227,7 @@ on BlockBreakEvent:
 				if line 1 of loop-block = "[LockIT]":
 					if line 2 of loop-block != "%event.getPlayer()%":
 						cancel event
-						event.getPlayer().sendMessage("%{lockIT::prefix}% &cThat chest doesn't belong to you!")
+						event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgChestDenied}%")
 					else:
 						uncancel event
 	if event.getBlock() = any door:
@@ -228,7 +236,7 @@ on BlockBreakEvent:
 				if line 1 of loop-block = "[LockIT]":
 					if line 2 of loop-block != "%event.getPlayer()%":
 						cancel event
-						event.getPlayer().sendMessage("%{lockIT::prefix}% &cThat door doesn'tt belong to you!")
+						event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgDoorDenied}%")
 					else:
 						uncancel event
 	if event.getBlock() = any trapdoor:
@@ -237,7 +245,7 @@ on BlockBreakEvent:
 				if line 1 of loop-block = "[LockIT]":
 					if line 2 of loop-block != "%event.getPlayer()%":
 						cancel event
-						event.getPlayer().sendMessage("%{lockIT::prefix}% &cThat door doesn'tt belong to you!")
+						event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgTrapdoorDenied}%")
 					else:
 						uncancel event
 	if event.getBlock() = crafting table:
@@ -246,7 +254,7 @@ on BlockBreakEvent:
 				if line 1 of loop-block = "[LockIT]":
 					if line 2 of loop-block != "%event.getPlayer()%":
 						cancel event
-						event.getPlayer().sendMessage("%{lockIT::prefix}% &cThat door doesn'tt belong to you!")
+						event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgTableDenied}%")
 					else:
 						uncancel event
 	if event.getBlock() = furnace:
@@ -255,7 +263,7 @@ on BlockBreakEvent:
 				if line 1 of loop-block = "[LockIT]":
 					if line 2 of loop-block != "%event.getPlayer()%":
 						cancel event
-						event.getPlayer().sendMessage("%{lockIT::prefix}% &cThat door doesn'tt belong to you!")
+						event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgFurnaceDenied}%")
 					else:
 						uncancel event
 	else if event.getBlock() = wall sign:
@@ -265,7 +273,7 @@ on BlockBreakEvent:
 				if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 					uncancel event
 					stop
-				event.getPlayer().sendMessage("%{lockIT::prefix}% &cThat sign doesn't belong to you!")
+				event.getPlayer().sendMessage("%{lockIT::prefix}% %{lockIT::msgSignDenied}%")
 				stop
 			else:
 				uncancel event
