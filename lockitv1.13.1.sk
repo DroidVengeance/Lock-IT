@@ -1,0 +1,308 @@
+import:
+	org.bukkit.event.player.PlayerInteractEvent
+	org.bukkit.event.player.PlayerInteractEntityEvent
+	org.bukkit.event.block.BlockBreakEvent
+	org.bukkit.event.block.BlockPlaceEvent
+	org.bukkit.event.block.Action
+
+
+on script load:
+	if folder "plugins/LockIT" doesn't exists:
+		create folder "plugins/LockIT"
+		send "[LockIT] &fCreating folder..." to the console
+	if file "plugins/LockIT/config.yml" doesn't exists:
+		download from "https://bit.ly/2MXFaCN" to "plugins/LockIT/config.yml"
+		send "[LockIT] &fGenerating config.yml..." to the console
+	if file "plugins/LockIT/permissions.yml" doesn't exists:
+		download from "https://bit.ly/2QiZ355" to "plugins/LockIT/permissions.yml"
+		send "[LockIT] &fGenereating permissions.yml..." to the console
+	if file "plugins/LockIT/messages.yml" doesn't exists:
+		download from "https://bit.ly/2CCG42G" to "plugins/LockIT/messages.yml"
+		send "[LockIT] &fGenerating messages.yml..." to the console
+		send "[LockIT] &2DONE!!" to the console
+		send "" to the console
+	send "[LockIT] &fGrabbing settings from the config..." to the console
+	delete {lockIT::*}
+	set {lockIT::prefix} to skutil yaml value "prefix" from file "plugins/LockIT/config.yml"
+	set {lockIT::fastLock} to skutil yaml value "fastLock" from file "plugins/LockIT/config.yml"
+	set {lockIT::version} to skutil yaml value "version" from file "plugins/LockIT/config.yml"
+	#set {lockit::protectedItems::*} to skutil yaml list "protectedItems" from file "plugins/LockIT/config.yml"
+	send "[LockIT] &fGrabbing all messages..." to the console
+	set {lockIT::msgAlreadyLocked} to skutil yaml value "msgAlreadyLocked" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgLocked} to skutil yaml value "msgLocked" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgChestDenied} to skutil yaml value "msgChestDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgDoorDenied} to skutil yaml value "msgDoorDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgTableDenied} to skutil yaml value "msgTableDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgFurnaceDenied} to skutil yaml value "msgFurnaceDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgTrapdoorDenied} to skutil yaml value "msgTrapdoorDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgUpdateSign} to skutil yaml value "msgUpdateSign" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgNoUpdateSign} to skutil yaml value "msgNoUpdateSign" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgSignDenied} to skutil yaml value "msgSignDenied" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgFixed} to skutil yaml value "msgFixed" from file "plugins/LockIT/messages.yml"
+	set {lockIT::msgSignUpdated} to skutil yaml value "msgSignUpdated" from file "plugins/LockIT/messages.yml"
+	send "[LockIT] &fGrabbing all permissions..." to the console
+	set {lockIT::useLockIT} to skutil yaml value "useLockIT" from file "plugins/LockIT/permissions.yml"
+	set {lockIT::bypassLocked} to skutil yaml value "bypassLocked" from file "plugins/LockIT/permissions.yml"
+	set {lockIT::adminLockIT} to skutil yaml value "adminLockIT" from file "plugins/LockIT/permissions.yml"
+	send "[LockIT] &2DONE! ENJOY!" to the console
+	send "[LockIT] You are running Version: &d%{lockIT::version}%" to the console
+	set {_verCheck} to text from "https://bit.ly/2NwSz43"
+	if {_verCheck} is not {lockIT::version}:
+		send "[LockIT] The most recent Version: &d%{lockIT::version}%" to the console
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# Commands
+# ---------------------------------------------------------------------------------------------------------------
+command /lockit [<integer>] [<text>]:
+	trigger:
+		if arg 1 is not set:
+			if arg 2 is "help":
+				message "&4&m---------------------------------------------------"
+				message "%{lockIT::prefix}% &eby DroidVengeance"
+				message "&4&m---------------------------------------------------"
+				message "  - &eTo edit a sign, rightclick and use:"
+				message "    - &e/lockit <line number> <text>"
+				if player has permission "lockit.admin":
+					message "  - &eTo turn on fastlock (shift+rightclick)"
+					message "    - &3/lockit true / false"
+				message "  - &eTo fix a door use:"
+				message "    - &e/lockit fix"
+			if arg 2 is "fix":
+				loop blocks in radius 2 of target block:
+					loop-block = wall sign
+					line 1 of loop-block is "[LockIT]"
+					line 2 of loop-block = "%player%"	
+					toggle target block
+					send "%colored {lockIT::prefix}% %colored {lockIT::msgFixed}%"
+		if arg 1 is set:
+			if arg 2 is not set:
+				set line arg 1 of {lockit::%player%::signEdit} to " "
+				send "%colored {lockIT::prefix}% %colored {lockIT::msgSignUpdated}%"
+				delete {lockit::%player%::signEdit}
+				stop
+			set line arg 1 of {lockit::%player%::signEdit} to arg 2
+			send "%colored {lockIT::prefix}% %colored {lockIT::msgSignUpdated}%"
+			delete {lockit::%player%::signEdit}
+
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# Fastlock
+# ---------------------------------------------------------------------------------------------------------------
+on BlockPlaceEvent:
+	if event.getBlockPlaced() = wall sign:
+		{lockIT::fastLock} = true
+		loop blocks in radius 1 of event.getBlockPlaced():
+			if loop-block = chest or any door or any trapdoor or crafting table or furnace:
+				if event.getPlayer() has permission "%{lockIT::useLockIT}%" or "%{lockIT::bypassLocked}%":
+					close event.getPlayer()'s inventory
+					wait 3 ticks
+					set line 1 of event.getBlockPlaced() to "[LockIT]"
+					set line 2 of event.getBlockPlaced() to "%event.getPlayer()%"
+					event.getPlayer().sendMessage("%colored {lockIT::prefix}% &6This item is now protected!")
+
+on sign edit:
+	if line 1 of block is "[LockIT]":
+		if player has permission "%{lockIT::useLockIT}%":
+			if line 2 of block is "%player%":
+				send "%colored {lockIT::prefix}% &6This item is now protected!"
+		else:
+			set block to air
+			send "%colored {lockIT::prefix}% &cYou don't have permission to do that!"
+
+
+# --------------------------------------------------------------------------------------------------------
+# Interacting with protected blocks
+# ---------------------------------------------------------------------------------------------------------------
+on PlayerInteractEvent:
+	if event.getClickedBlock() = chest:
+		loop blocks in radius 1 of event.getClickedBlock():
+			if loop-block = wall sign:
+				if line 1 of loop-block = "[LockIT]":
+					if line 2 of loop-block != "%event.getPlayer()%":
+						cancel event
+						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
+							uncancel event
+							stop
+						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+							uncancel event
+							stop
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgChestDenied}%")
+						stop
+					else:
+						uncancel event
+	if event.getClickedBlock() = any door:
+		loop blocks in radius 2 of event.getClickedBlock():
+			if loop-block = wall sign:
+				if line 1 of loop-block = "[LockIT]":
+					if line 2 of loop-block != "%event.getPlayer()%":
+						cancel event
+						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
+							uncancel event
+							if line 4 of loop-block = "[timer:1]":
+								wait 1 second
+								close event.getClickedBlock()
+							if line 4 of loop-block = "[timer:2]":
+								wait 2 second
+								close event.getClickedBlock()
+							if line 4 of loop-block = "[timer:3]":
+								wait 3 second
+								close event.getClickedBlock()
+							if line 4 of loop-block = "[timer:4]":
+								wait 4 second
+								close event.getClickedBlock()
+							if line 4 of loop-block = "[timer:5]":
+								wait 5 second
+								close event.getClickedBlock()
+							stop
+						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+							uncancel event
+							stop
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgDoorDenied}%")
+						stop
+					else:
+						uncancel event
+						if line 4 of loop-block = "[timer:1]":
+							wait 1 second
+							close event.getClickedBlock()
+						if line 4 of loop-block = "[timer:2]":
+							wait 2 second
+							close event.getClickedBlock()
+						if line 4 of loop-block = "[timer:3]":
+							wait 3 second
+							close event.getClickedBlock()
+						if line 4 of loop-block = "[timer:4]":
+							wait 4 second
+							close event.getClickedBlock()
+						if line 4 of loop-block = "[timer:5]":
+							wait 5 second
+							close event.getClickedBlock()
+	if event.getClickedBlock() = any trapdoor:
+		loop blocks in radius 1 of event.getClickedBlock():
+			if loop-block = wall sign:
+				if line 1 of loop-block = "[LockIT]":
+					if line 2 of loop-block != "%event.getPlayer()%":
+						cancel event
+						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
+							uncancel event
+							stop
+						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+							uncancel event
+							stop
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgTrapdoorDenied}%")
+						stop
+					else:
+						uncancel event
+	if event.getClickedBlock() = crafting table:
+		loop blocks in radius 1 of event.getClickedBlock():
+			if loop-block = wall sign:
+				if line 1 of loop-block = "[LockIT]":
+					if line 2 of loop-block != "%event.getPlayer()%":
+						cancel event
+						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
+							uncancel event
+							stop
+						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+							uncancel event
+							stop
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgTableDenied}%")
+						stop
+					else:
+						uncancel event
+	if event.getClickedBlock() = furnace:
+		loop blocks in radius 1 of event.getClickedBlock():
+			if loop-block = wall sign:
+				if line 1 of loop-block = "[LockIT]":
+					if line 2 of loop-block != "%event.getPlayer()%":
+						cancel event
+						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
+							uncancel event
+							stop
+						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+							uncancel event
+							stop
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgfurnaceDenied}%")
+						stop
+					else:
+						uncancel event
+	else if event.getClickedBlock() = wall sign:
+		if line 1 of event.getClickedBlock() = "[LockIT]":
+			"%event.getAction()%" contains "RIGHT_CLICK"
+			if line 2 of event.getClickedBlock() != "%event.getPlayer()%":
+				cancel event
+				if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "%{lockIT::adminLockIT}%" or "lockit.admin.*":
+					uncancel event
+					event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgUpdateSign}%")
+					set {lockit::%event.getPlayer()%::signEdit} to event.getClickedBlock()
+					stop
+				event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgNoUpdateSign}%")
+				stop
+			else:
+				uncancel event
+				event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgUpdateSign}%")
+				set {lockit::%event.getPlayer()%::signEdit} to event.getClickedBlock()
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# Break Protection
+# ---------------------------------------------------------------------------------------------------------------
+on BlockBreakEvent:
+	if event.getBlock() = CHEST:
+		loop blocks in radius 1 of event.getBlock():
+			if loop-block = wall sign:
+				if line 1 of loop-block = "[LockIT]":
+					if line 2 of loop-block != "%event.getPlayer()%":
+						cancel event
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgChestDenied}%")
+					else:
+						uncancel event
+	if event.getBlock() = any door:
+		loop blocks in radius 1 of event.getBlock():
+			if loop-block = wall sign:
+				if line 1 of loop-block = "[LockIT]":
+					if line 2 of loop-block != "%event.getPlayer()%":
+						cancel event
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgDoorDenied}%")
+					else:
+						uncancel event
+	if event.getBlock() = any trapdoor:
+		loop blocks in radius 1 of event.getBlock():
+			if loop-block = wall sign:
+				if line 1 of loop-block = "[LockIT]":
+					if line 2 of loop-block != "%event.getPlayer()%":
+						cancel event
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgTrapdoorDenied}%")
+					else:
+						uncancel event
+	if event.getBlock() = crafting table:
+		loop blocks in radius 1 of event.getBlock():
+			if loop-block = wall sign:
+				if line 1 of loop-block = "[LockIT]":
+					if line 2 of loop-block != "%event.getPlayer()%":
+						cancel event
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgTableDenied}%")
+					else:
+						uncancel event
+	if event.getBlock() = furnace:
+		loop blocks in radius 1 of event.getBlock():
+			if loop-block = wall sign:
+				if line 1 of loop-block = "[LockIT]":
+					if line 2 of loop-block != "%event.getPlayer()%":
+						cancel event
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgFurnaceDenied}%")
+					else:
+						uncancel event
+	else if event.getBlock() = wall sign:
+		if line 1 of event.getBlock() = "[LockIT]":
+			if line 2 of event.getBlock() != "%event.getPlayer()%":
+				cancel event
+				if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
+					uncancel event
+					stop
+				event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgSignDenied}%")
+				stop
+			else:
+				uncancel event
+
+
