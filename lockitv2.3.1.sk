@@ -307,7 +307,7 @@ on BlockBreakEvent:
 
 
 # ---------------------------------------------------------------------------------------------------------------
-# Break Protection
+# Hopper Protection
 # ---------------------------------------------------------------------------------------------------------------
 on place of hopper:
 	if block west of block above event-block is a wall sign:
