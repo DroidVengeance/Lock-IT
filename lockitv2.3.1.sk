@@ -94,7 +94,7 @@ on BlockPlaceEvent:
 	if event.getBlockPlaced() = wall sign:
 		{lockIT::fastLock} = true
 		loop blocks in radius 1 of event.getBlockPlaced():
-			if loop-block = chest or any door or any trapdoor or crafting table or furnace:
+			if loop-block = chest or any door or any trapdoor or crafting table or furnace or any fence gate or enchanting table or anvil:
 				if event.getPlayer() has permission "%{lockIT::useLockIT}%" or "%{lockIT::bypassLocked}%":
 					close event.getPlayer()'s inventory
 					wait 3 ticks
@@ -306,3 +306,23 @@ on BlockBreakEvent:
 				uncancel event
 
 
+# ---------------------------------------------------------------------------------------------------------------
+# Break Protection
+# ---------------------------------------------------------------------------------------------------------------
+on place of hopper:
+	if block west of block above event-block is a wall sign:
+		line 1 of block west of block above event-block is "[LockIT]"
+		cancel event
+		send "&cYou can't place that below a protected chest."
+	if block east of block above event-block is a wall sign:
+		line 1 of block east of block above event-block is "[LockIT]"
+		cancel event
+		send "&cYou can't place that below a protected chest."
+	if block south of block above event-block is a wall sign:
+		line 1 of block south of block above event-block is "[LockIT]"
+		cancel event
+		send "&cYou can't place that below a protected chest."
+	if block north of block above event-block is a wall sign:
+		line 1 of block north of block above event-block is "[LockIT]"
+		cancel event
+		send "&cYou can't place that below a protected chest."
