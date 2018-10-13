@@ -72,7 +72,7 @@ command /lockit [<integer>] [<text>]:
 				loop blocks in radius 2 of target block:
 					loop-block = wall sign
 					line 1 of loop-block is "[LockIT]"
-					line 2 of loop-block = "%player%"	
+					line 2 of loop-block = "%player%" or uuid of player	
 					toggle target block
 					send "%colored {lockIT::prefix}% %colored {lockIT::msgFixed}%"
 		if arg 1 is set:
@@ -99,13 +99,13 @@ on BlockPlaceEvent:
 					close event.getPlayer()'s inventory
 					wait 3 ticks
 					set line 1 of event.getBlockPlaced() to "[LockIT]"
-					set line 2 of event.getBlockPlaced() to "%event.getPlayer()%"
+					set line 2 of event.getBlockPlaced() to "%event.getPlayer()%              %event.getPlayer()'s uuid%"
 					event.getPlayer().sendMessage("%colored {lockIT::prefix}% &6This item is now protected!")
 
 on sign edit:
 	if line 1 of block is "[LockIT]":
 		if player has permission "%{lockIT::useLockIT}%":
-			if line 2 of block is "%player%":
+			if line 2 of block contains "%player%" or uuid of event.getPlayer():
 				send "%colored {lockIT::prefix}% &6This item is now protected!"
 		else:
 			set block to air
@@ -120,12 +120,12 @@ on PlayerInteractEvent:
 		loop blocks in radius 1 of event.getClickedBlock():
 			if loop-block = wall sign:
 				if line 1 of loop-block = "[LockIT]":
-					if line 2 of loop-block != "%event.getPlayer()%":
+					if line 2 of loop-block does not contain "%event.getPlayer()%" or uuid of event.getPlayer():
 						cancel event
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 							uncancel event
 							stop
-						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+						if line 3 of loop-block contains "%event.getPlayer()%" or uuid of event.getPlayer() or "everyone":
 							uncancel event
 							stop
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgChestDenied}%")
@@ -136,7 +136,7 @@ on PlayerInteractEvent:
 		loop blocks in radius 2 of event.getClickedBlock():
 			if loop-block = wall sign:
 				if line 1 of loop-block = "[LockIT]":
-					if line 2 of loop-block != "%event.getPlayer()%":
+					if line 2 of loop-block does not contain "%event.getPlayer()%" or uuid of event.getPlayer():
 						cancel event
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 							uncancel event
@@ -156,7 +156,7 @@ on PlayerInteractEvent:
 								wait 5 second
 								close event.getClickedBlock()
 							stop
-						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+						if line 3 of loop-block contains "%event.getPlayer()%" or uuid of event.getPlayer() or "everyone":
 							uncancel event
 							stop
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgDoorDenied}%")
@@ -182,12 +182,12 @@ on PlayerInteractEvent:
 		loop blocks in radius 1 of event.getClickedBlock():
 			if loop-block = wall sign:
 				if line 1 of loop-block = "[LockIT]":
-					if line 2 of loop-block != "%event.getPlayer()%":
+					if line 2 of loop-block does not contain "%event.getPlayer()%" or uuid of event.getPlayer():
 						cancel event
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 							uncancel event
 							stop
-						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+						if line 3 of loop-block contains "%event.getPlayer()%" or uuid of event.getPlayer() or "everyone":
 							uncancel event
 							stop
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgTrapdoorDenied}%")
@@ -198,12 +198,12 @@ on PlayerInteractEvent:
 		loop blocks in radius 1 of event.getClickedBlock():
 			if loop-block = wall sign:
 				if line 1 of loop-block = "[LockIT]":
-					if line 2 of loop-block != "%event.getPlayer()%":
+					if line 2 of loop-block does not contain "%event.getPlayer()%" or uuid of event.getPlayer():
 						cancel event
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 							uncancel event
 							stop
-						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+						if line 3 of loop-block contains "%event.getPlayer()%" or uuid of event.getPlayer() or "everyone":
 							uncancel event
 							stop
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgTableDenied}%")
@@ -214,12 +214,12 @@ on PlayerInteractEvent:
 		loop blocks in radius 1 of event.getClickedBlock():
 			if loop-block = wall sign:
 				if line 1 of loop-block = "[LockIT]":
-					if line 2 of loop-block != "%event.getPlayer()%":
+					if line 2 of loop-block does not contain "%event.getPlayer()%" or uuid of event.getPlayer():
 						cancel event
 						if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 							uncancel event
 							stop
-						if line 3 of loop-block = "%event.getPlayer()%" or "everyone":
+						if line 3 of loop-block contains "%event.getPlayer()%" or uuid of event.getPlayer() or "everyone":
 							uncancel event
 							stop
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgfurnaceDenied}%")
@@ -229,7 +229,7 @@ on PlayerInteractEvent:
 	else if event.getClickedBlock() = wall sign:
 		if line 1 of event.getClickedBlock() = "[LockIT]":
 			"%event.getAction()%" contains "RIGHT_CLICK"
-			if line 2 of event.getClickedBlock() != "%event.getPlayer()%":
+			if line 2 of event.getClickedBlock() does not contain "%event.getPlayer()%" or uuid of event.getPlayer():
 				cancel event
 				if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "%{lockIT::adminLockIT}%" or "lockit.admin.*":
 					uncancel event
@@ -252,7 +252,7 @@ on BlockBreakEvent:
 		loop blocks in radius 1 of event.getBlock():
 			if loop-block = wall sign:
 				if line 1 of loop-block = "[LockIT]":
-					if line 2 of loop-block != "%event.getPlayer()%":
+					if line 2 of loop-block != "%event.getPlayer()%" or uuid of event.getPlayer():
 						cancel event
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgChestDenied}%")
 					else:
@@ -261,7 +261,7 @@ on BlockBreakEvent:
 		loop blocks in radius 1 of event.getBlock():
 			if loop-block = wall sign:
 				if line 1 of loop-block = "[LockIT]":
-					if line 2 of loop-block != "%event.getPlayer()%":
+					if line 2 of loop-block != "%event.getPlayer()%" or uuid of event.getPlayer():
 						cancel event
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgDoorDenied}%")
 					else:
@@ -270,7 +270,7 @@ on BlockBreakEvent:
 		loop blocks in radius 1 of event.getBlock():
 			if loop-block = wall sign:
 				if line 1 of loop-block = "[LockIT]":
-					if line 2 of loop-block != "%event.getPlayer()%":
+					if line 2 of loop-block != "%event.getPlayer()%" or uuid of event.getPlayer():
 						cancel event
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgTrapdoorDenied}%")
 					else:
@@ -279,7 +279,7 @@ on BlockBreakEvent:
 		loop blocks in radius 1 of event.getBlock():
 			if loop-block = wall sign:
 				if line 1 of loop-block = "[LockIT]":
-					if line 2 of loop-block != "%event.getPlayer()%":
+					if line 2 of loop-block != "%event.getPlayer()%" or uuid of event.getPlayer():
 						cancel event
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgTableDenied}%")
 					else:
@@ -288,14 +288,14 @@ on BlockBreakEvent:
 		loop blocks in radius 1 of event.getBlock():
 			if loop-block = wall sign:
 				if line 1 of loop-block = "[LockIT]":
-					if line 2 of loop-block != "%event.getPlayer()%":
+					if line 2 of loop-block != "%event.getPlayer()%" or uuid of event.getPlayer():
 						cancel event
 						event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgFurnaceDenied}%")
 					else:
 						uncancel event
 	else if event.getBlock() = wall sign:
 		if line 1 of event.getBlock() = "[LockIT]":
-			if line 2 of event.getBlock() != "%event.getPlayer()%":
+			if line 2 of event.getBlock() != "%event.getPlayer()%" or uuid of event.getPlayer():
 				cancel event
 				if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
 					uncancel event
