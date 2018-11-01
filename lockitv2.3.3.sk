@@ -99,7 +99,7 @@ on BlockPlaceEvent:
 					close event.getPlayer()'s inventory
 					wait 3 ticks
 					set line 1 of event.getBlockPlaced() to "[LockIT]"
-					set line 2 of event.getBlockPlaced() to "%event.getPlayer()%              %event.getPlayer()'s uuid%"
+					set line 2 of event.getBlockPlaced() to "%event.getPlayer()%"
 					event.getPlayer().sendMessage("%colored {lockIT::prefix}% &6This item is now protected!")
 
 on sign edit:
@@ -132,6 +132,22 @@ on PlayerInteractEvent:
 						stop
 					else:
 						uncancel event
+			if loop-block = chest:
+				loop blocks in radius 1 of loop-block-1:
+					if loop-block-2 = wall sign:
+						if line 1 of loop-block-2 = "[LockIT]":
+							if line 2 of loop-block-2 does not contain "%event.getPlayer()%" or uuid of event.getPlayer():
+								cancel event
+								if event.getPlayer() has permission "%{lockIT::bypassLocked}%" or "lockit.admin.*":
+									uncancel event
+									stop
+								if line 3 of loop-block-2 contains "%event.getPlayer()%" or uuid of event.getPlayer() or "everyone":
+									uncancel event
+									stop
+								event.getPlayer().sendMessage("%colored {lockIT::prefix}% %colored {lockIT::msgChestDenied}%")
+								stop
+							else:
+								uncancel event
 	if event.getClickedBlock() = any door:
 		loop blocks in radius 2 of event.getClickedBlock():
 			if loop-block = wall sign:
