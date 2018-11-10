@@ -75,6 +75,19 @@ command /lockit [<integer>] [<text>]:
 					line 2 of loop-block = "%player%" or uuid of player	
 					toggle target block
 					send "%colored {lockIT::prefix}% %colored {lockIT::msgFixed}%"
+			if arg 2 is "fastlock":
+				if {lockIT::%player%::fastLock} is not set:
+					set {lockIT::%player%::fastLock} to false
+					send "%colored {lockIT::prefix}% &9Fastlock &6is turned &cOFF"
+					stop
+				if {lockIT::%player%::fastLock} is true:
+					set {lockIT::%player%::fastLock} to false
+					send "%colored {lockIT::prefix}% &9Fastlock &6is turned &cOFF"
+					stop
+				if {lockIT::%player%::fastLock} is false:
+					set {lockIT::%player%::fastLock} to true
+					send "%colored {lockIT::prefix}% &9Fastlock &6is turned &aON"
+					stop
 		if arg 1 is set:
 			if arg 2 is not set:
 				set line arg 1 of {lockit::%player%::signEdit} to " "
@@ -93,15 +106,30 @@ command /lockit [<integer>] [<text>]:
 on BlockPlaceEvent:
 	if event.getBlockPlaced() = wall sign:
 		{lockIT::fastLock} = true
-		loop blocks in radius 1 of event.getBlockPlaced():
-			if loop-block = chest or any door or any trapdoor or crafting table or furnace or any fence gate or enchanting table or anvil:
-				if event.getPlayer() has permission "%{lockIT::useLockIT}%" or "%{lockIT::bypassLocked}%":
-					close event.getPlayer()'s inventory
-					wait 3 ticks
-					set line 1 of event.getBlockPlaced() to "[LockIT]"
-					set line 2 of event.getBlockPlaced() to "%event.getPlayer()%"
-					event.getPlayer().sendMessage("%colored {lockIT::prefix}% &6This item is now protected!")
-
+		if {lockIT::%event.getPlayer()%::fastLock} is not set:
+			loop blocks in radius 1 of event.getBlockPlaced():
+				if loop-block = chest or any door or any trapdoor or crafting table or furnace or any fence gate or enchanting table or anvil:
+					if event.getPlayer() has permission "%{lockIT::useLockIT}%" or "%{lockIT::bypassLocked}%":
+						close event.getPlayer()'s inventory
+						wait 3 ticks
+						set line 1 of event.getBlockPlaced() to "[LockIT]"
+						set line 2 of event.getBlockPlaced() to "%event.getPlayer()%"
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% &6This item is now protected!")
+						stop
+		if {lockIT::%event.getPlayer()%::fastLock} is true:
+			loop blocks in radius 1 of event.getBlockPlaced():
+				if loop-block = chest or any door or any trapdoor or crafting table or furnace or any fence gate or enchanting table or anvil:
+					if event.getPlayer() has permission "%{lockIT::useLockIT}%" or "%{lockIT::bypassLocked}%":
+						close event.getPlayer()'s inventory
+						wait 3 ticks
+						set line 1 of event.getBlockPlaced() to "[LockIT]"
+						set line 2 of event.getBlockPlaced() to "%event.getPlayer()%"
+						event.getPlayer().sendMessage("%colored {lockIT::prefix}% &6This item is now protected!")
+						stop
+		else:
+			wait 1 ticks
+			stop
+			
 on sign edit:
 	if line 1 of block is "[LockIT]":
 		if player has permission "%{lockIT::useLockIT}%":
